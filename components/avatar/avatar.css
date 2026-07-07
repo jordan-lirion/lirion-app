@@ -1,0 +1,36 @@
+/* ── Avatar ─────────────────────────────────────────────────── */
+.avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--radius-full);
+  background: var(--background);
+  color: var(--foreground);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  flex-shrink: 0;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--easing-default);
+}
+
+.avatar:hover {
+  background: color-mix(in oklab, var(--background) 85%, black);
+}
+
+.avatar--lg {
+  width: 4rem;
+  height: 4rem;
+  font-size: var(--text-2xl);
+  border: 2px solid var(--border);
+  cursor: default;
+  pointer-events: none;
+}
+
+.avatar--lg:hover {
+  background: var(--background);
+}

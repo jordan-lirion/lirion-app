@@ -1,0 +1,118 @@
+/* ── Card Training ──────────────────────────────────────────── */
+.card-training {
+  display: flex;
+  flex-direction: column;
+  width: 10.5rem;           /* default, overridden in home.html */
+  aspect-ratio: 4 / 3;
+  height: auto;
+  border-radius: var(--radius-2xl);
+  background: var(--card-training-bg, var(--muted));
+  padding: 0;
+  flex-shrink: 0;
+  overflow: hidden;
+  cursor: pointer;
+  outline: 4px solid transparent;
+  outline-offset: 4px;
+  transition:
+    transform     var(--duration-fast)   var(--easing-default),
+    outline-color var(--duration-normal) var(--easing-default);
+}
+
+.card-training:hover {
+  transform: scale(1.03);
+}
+
+.card-training--active {
+  outline-color: oklch(1 0 0 / 0.55);
+}
+
+/* ── Icon frame ──────────────────────────────────────────────── */
+.card-training__icon-area {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--card-training-dark);
+  margin: 0.375rem 0.375rem 0;
+  border-radius: calc(var(--radius-2xl) - 0.375rem);
+}
+
+.card-training__icon-circle {
+  width: 8vw;
+  height: 8vw;
+  border-radius: var(--radius-full);
+  background: var(--card-training-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-training__icon {
+  width: 8vw;
+  height: 8vw;
+  filter: brightness(0) invert(1);
+}
+
+/* ── Footer ──────────────────────────────────────────────────── */
+.card-training__footer {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-5);
+}
+
+.card-training__title {
+  color: oklch(1 0 0);
+  font-size: var(--text-2xl);
+  font-weight: var(--font-bold);
+  text-align: center;
+  line-height: var(--leading-tight);
+}
+
+/* ── Color variants (11 trainings) ──────────────────────────── */
+.card-training--larma {
+  --card-training-bg:   var(--training-larma-200);
+  --card-training-dark: var(--training-larma-300);
+}
+.card-training--graphogame {
+  --card-training-bg:   var(--training-graphogame-200);
+  --card-training-dark: var(--training-graphogame-300);
+}
+.card-training--memoson {
+  --card-training-bg:   var(--training-memoson-200);
+  --card-training-dark: var(--training-memoson-300);
+}
+.card-training--fus-seg {
+  --card-training-bg:   var(--training-fus-seg-200);
+  --card-training-dark: var(--training-fus-seg-300);
+}
+.card-training--phonemix {
+  --card-training-bg:   var(--training-phonemix-200);
+  --card-training-dark: var(--training-phonemix-300);
+}
+.card-training--ran {
+  --card-training-bg:   var(--training-ran-200);
+  --card-training-dark: var(--training-ran-300);
+}
+.card-training--loh {
+  --card-training-bg:   var(--training-loh-200);
+  --card-training-dark: var(--training-loh-300);
+}
+.card-training--maeva {
+  --card-training-bg:   var(--training-maeva-200);
+  --card-training-dark: var(--training-maeva-300);
+}
+.card-training--switchipido {
+  --card-training-bg:   var(--training-switchipido-200);
+  --card-training-dark: var(--training-switchipido-300);
+}
+.card-training--elor {
+  --card-training-bg:   var(--training-elor-200);
+  --card-training-dark: var(--training-elor-300);
+}
+.card-training--rech-visuelle {
+  --card-training-bg:   var(--training-rech-visuelle-200);
+  --card-training-dark: var(--training-rech-visuelle-300);
+}

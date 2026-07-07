@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Card — Preview</title>
+  <link rel="stylesheet" href="../main.css">
+  <style>
+    body {
+      background: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-6);
+      flex-wrap: wrap;
+      min-height: 100vh;
+      padding: var(--space-8);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Card with header + content + footer -->
+  <div class="card" style="width: 20rem;">
+    <div class="card__header">
+      <h2 class="card__title">Connexion</h2>
+      <p class="card__description">Entre ton email pour accéder à Lirion.</p>
+    </div>
+    <div class="card__content">
+      <div class="field">
+        <label class="label" for="c-email">Email</label>
+        <div class="input-group input-group--icon-start">
+          <input class="input" type="email" id="c-email" placeholder="Mon email">
+          <span class="input-group__icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="card__footer">
+      <button class="btn btn--default btn--full btn--lg">Continuer</button>
+    </div>
+  </div>
+
+  <!-- Card — content only, no header/footer -->
+  <div class="card" style="width: 18rem;">
+    <div class="card__content">
+      <p style="font-size: var(--text-base); color: var(--muted-foreground); line-height: var(--leading-normal);">
+        Une carte peut contenir uniquement du contenu, sans header ni footer.
+      </p>
+      <button class="btn btn--outline btn--sm">En savoir plus</button>
+    </div>
+  </div>
+
+  <script type="module" src="../form/form.js"></script>
+</body>
+</html>

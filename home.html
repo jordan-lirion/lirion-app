@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title>Lirion — Accueil</title>
+  <link rel="stylesheet" href="components/main.css">
+  <style>
+    #game-canvas {
+      transition: background var(--duration-slow) var(--easing-default);
+    }
+
+    /* Cards sized for 2 visible + peek of 3rd.
+       Left padding centers the first card horizontally. */
+    .card-training {
+      width: 40vw;
+    }
+
+    /* Scroll container */
+    .home-body {
+      padding-left: 0;
+      padding-right: 0;
+      justify-content: flex-start;
+      scrollbar-width: none;
+    }
+    .home-body::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Track: padding-left = (100vw - card_w) / 2 = (100 - 27) / 2 = 36.5vw
+       This centers the first card on the canvas. */
+    .home-cards-track {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: var(--space-5);
+      flex-shrink: 0;
+      padding-left: 36.5vw;
+      padding-right: 8vw;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-viewport">
+    <div class="game-canvas" id="game-canvas" style="background: var(--training-larma-100)">
+      <div class="screen screen-layout">
+
+        <header class="screen-header">
+          <div class="bar-start">
+            <a href="profile.html" class="avatar">LH</a>
+          </div>
+        </header>
+
+        <main class="screen-body home-body">
+          <div class="home-cards-track">
+
+            <!-- Larma -->
+            <div class="card-training card-training--larma card-training--active" data-training="larma">
+              <div class="card-training__icon-area">
+                <div class="card-training__icon-circle">
+                  <img src="assets/training/larma.svg" class="card-training__icon" alt="">
+                </div>
+              </div>
+              <div class="card-training__footer">
+                <span class="card-training__title">Larma</span>
+                <span class="badge">Niveau 1</span>
+              </div>
+            </div>
+
+            <!-- Graphogame -->
+            <div class="card-training card-training--graphogame" data-training="graphogame">
+              <div class="card-training__icon-area">
+                <div class="card-training__icon-circle">
+                  <img src="assets/training/graphogame.svg" class="card-training__icon" alt="">
+                </div>
+              </div>
+              <div class="card-training__footer">
+                <span class="card-training__title">Graphogame</span>
+                <span class="badge">Niveau 1</span>
+              </div>
+            </div>
+
+            <!-- Memoson (sélectionné par défaut) -->
+            <div class="card-training card-training--memoson" data-training="memoson">
+              <div class="card-training__icon-area">
+                <div class="card-training__icon-circle">
+                  <img src="assets/training/memoson.svg" class="card-training__icon" alt="">
+                </div>
+              </div>
+              <div class="card-training__footer">
+                <span class="card-training__title">Memoson</span>
+                <span class="badge">Niveau 1</span>
+              </div>
+            </div>
+
+            <!-- Fus-Seg -->
+            <div class="card-training card-training--fus-seg" data-training="fus-seg">
+              <div class="card-training__icon-area">
+                <div class="card-training__icon-circle">
+                  <img src="assets/training/fus-seg.svg" class="card-training__icon" alt="">
+                </div>
+              </div>
+              <div class="card-training__footer">
+                <span class="card-training__title">Fus-Seg</span>
+                <span class="badge">Niveau 1</span>
+              </div>
+            </div>
+
+            <!-- Phonemix -->
+            <div class="card-training card-training--phonemix" data-training="phonemix">
+              <div class="card-training__icon-area">
+                <div class="card-training__icon-circle">
+                  <img src="assets/training/phonemix.svg" class="card-training__icon" alt="">
+                </div>
+              </div>
+              <div class="card-training__footer">
+                <span class="card-training__title">Phonemix</span>
+                <span class="badge">Niveau 1</span>
+              </div>
+            </div>
+
+            <!-- RAN -->
+            <div class="card-training card-training--ran" data-training="ran">
+              <div class="card-training__icon-area">
+                <div class="card-training__icon-circle">
+                  <img src="assets/training/ran.svg" class="card-training__icon" alt="">
+                </div>
+              </div>
+              <div class="card-training__footer">
+                <span class="card-training__title">RAN</span>
+                <span class="badge">Niveau 1</span>
+              </div>
+            </div>
+
+            <!-- Loh -->
+            <div class="card-training card-training--loh" data-training="loh">
+              <div class="card-training__icon-area">
+                <div class="card-training__icon-circle">
+                  <img src="assets/training/loh.svg" class="card-training__icon" alt="">
+                </div>
+              </div>
+              <div class="card-training__footer">
+                <span class="card-training__title">Loh</span>
+                <span class="badge">Niveau 1</span>
+              </div>
+            </div>
+
+            <!-- Maeva -->
+            <div class="card-training card-training--maeva" data-training="maeva">
+              <div class="card-training__icon-area">
+                <div class="card-training__icon-circle">
+                  <img src="assets/training/maeva.svg" class="card-training__icon" alt="">
+                </div>
+              </div>
+              <div class="card-training__footer">
+                <span class="card-training__title">Maeva</span>
+                <span class="badge">Niveau 1</span>
+              </div>
+            </div>
+
+            <!-- Switchipido -->
+            <div class="card-training card-training--switchipido" data-training="switchipido">
+              <div class="card-training__icon-area">
+                <div class="card-training__icon-circle">
+                  <img src="assets/training/switchipido.svg" class="card-training__icon" alt="">
+                </div>
+              </div>
+              <div class="card-training__footer">
+                <span class="card-training__title">Switchipido</span>
+                <span class="badge">Niveau 1</span>
+              </div>
+            </div>
+
+            <!-- Elor -->
+            <div class="card-training card-training--elor" data-training="elor">
+              <div class="card-training__icon-area">
+                <div class="card-training__icon-circle">
+                  <img src="assets/training/elor.svg" class="card-training__icon" alt="">
+                </div>
+              </div>
+              <div class="card-training__footer">
+                <span class="card-training__title">Elor</span>
+                <span class="badge">Niveau 1</span>
+              </div>
+            </div>
+
+            <!-- Rech. Visuelle -->
+            <div class="card-training card-training--rech-visuelle" data-training="rech-visuelle">
+              <div class="card-training__icon-area">
+                <div class="card-training__icon-circle">
+                  <img src="assets/training/rech-visuelle.svg" class="card-training__icon" alt="">
+                </div>
+              </div>
+              <div class="card-training__footer">
+                <span class="card-training__title">Rech. Visuelle</span>
+                <span class="badge">Niveau 1</span>
+              </div>
+            </div>
+
+          </div>
+        </main>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script type="module" src="components/main.js"></script>
+  <script>
+    lucide.createIcons();
+
+    const canvas          = document.getElementById('game-canvas');
+    const cards           = document.querySelectorAll('.card-training');
+    const scrollContainer = document.querySelector('.home-body');
+
+    function centerCard(card, smooth = true) {
+      const containerWidth = scrollContainer.offsetWidth;
+      const target = card.offsetLeft + card.offsetWidth / 2 - containerWidth / 2;
+      scrollContainer.scrollTo({ left: target, behavior: smooth ? 'smooth' : 'instant' });
+    }
+
+    function selectCard(card) {
+      const training = card.dataset.training;
+      canvas.style.background = `var(--training-${training}-100)`;
+      cards.forEach(c => c.classList.remove('card-training--active'));
+      card.classList.add('card-training--active');
+      centerCard(card);
+    }
+
+    cards.forEach(card => card.addEventListener('click', () => selectCard(card)));
+
+    // Center the initially active card without animation
+    const initialCard = document.querySelector('.card-training--active');
+    if (initialCard) centerCard(initialCard, false);
+  </script>
+</body>
+</html>

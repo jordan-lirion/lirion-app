@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title>Lirion — Profil</title>
+  <link rel="stylesheet" href="components/main.css">
+  <style>
+    .game-canvas {
+      background: var(--muted);
+    }
+
+    .profile__card {
+      width: 100%;
+      max-width: 24rem;
+    }
+
+    .profile__card .card__content {
+      align-items: center;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-viewport">
+    <div class="game-canvas">
+      <div class="screen screen-layout">
+
+        <header class="screen-header">
+          <div class="bar-start">
+            <a href="home.html" class="btn btn--icon btn--primary" aria-label="Retour">
+              <i data-lucide="arrow-left" class="text-xl"></i>
+            </a>
+          </div>
+          <div class="bar-end">
+            <a href="index.html" class="btn btn--icon btn--primary" aria-label="Power Off">
+              <i data-lucide="power" class="text-xl"></i>
+            </a>
+          </div>
+        </header>
+
+        <main class="screen-body">
+
+          <div class="card profile__card">
+
+            <div class="card__content">
+              <div class="avatar avatar--lg">LH</div>
+              <div>
+                <h1 class="card__title">Louna Harrar</h1>
+                <p class="card__description">louna.harrar@gmail.com</p>
+              </div>
+            </div>
+
+            <div class="card__footer">
+              <button class="btn btn--default btn--lg btn--full">
+                Gérer mon abonnement
+              </button>
+            </div>
+
+          </div>
+
+        </main>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script type="module" src="components/main.js"></script>
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

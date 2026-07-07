@@ -1,0 +1,126 @@
+/* ── Base ──────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: 0 var(--space-6);
+  height: var(--height-md);
+  border-radius: var(--radius-full);
+  font-family: var(--font-primary);
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  border: 1px solid transparent;
+  text-decoration: none;
+  transition:
+    background  var(--duration-fast) var(--easing-default),
+    color       var(--duration-fast) var(--easing-default),
+    opacity     var(--duration-fast) var(--easing-default);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.btn:disabled,
+.btn[aria-disabled="true"] {
+  pointer-events: none;
+  background: var(--disabled-bg);
+  color: var(--disabled-fg);
+  border-color: transparent;
+}
+
+/* ── Variants ──────────────────────────────────────────────── */
+.btn--default {
+  background: var(--foreground);
+  color: var(--background);
+}
+.btn--default:hover {
+  background: color-mix(in oklab, var(--foreground) 80%, transparent);
+}
+
+.btn--primary {
+  background: var(--background);
+  color: var(--foreground);
+}
+.btn--primary:hover {
+  background: color-mix(in oklab, var(--background) 85%, black);
+}
+
+.btn--secondary {
+  background: var(--muted);
+  color: var(--foreground);
+  border-color: var(--border);
+}
+.btn--secondary:hover {
+  background: color-mix(in oklab, var(--muted) 90%, black);
+}
+
+.btn--outline {
+  background: transparent;
+  color: var(--foreground);
+  border-color: var(--border);
+}
+.btn--outline:hover {
+  background: var(--muted);
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--foreground);
+  border-color: transparent;
+}
+.btn--ghost:hover {
+  background: var(--muted);
+}
+
+.btn--destructive {
+  background: var(--destructive);
+  color: var(--destructive-foreground);
+}
+.btn--destructive:hover {
+  background: color-mix(in oklab, var(--destructive) 85%, black);
+}
+
+.btn--link {
+  background: transparent;
+  color: var(--foreground);
+  border-color: transparent;
+  padding: 0;
+  height: auto;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.btn--link:hover {
+  color: color-mix(in oklab, var(--foreground) 65%, transparent);
+}
+
+/* ── Sizes ─────────────────────────────────────────────────── */
+.btn--sm {
+  height: var(--height-sm);
+  padding: 0 var(--space-4);
+  font-size: var(--text-sm);
+}
+
+.btn--lg {
+  height: var(--height-xl);
+  padding: 0 var(--space-8);
+  font-size: var(--text-xl);
+}
+
+/* ── Modifiers ─────────────────────────────────────────────── */
+.btn--full { width: 100%; }
+
+.btn--icon {
+  width: var(--height-md);
+  padding: 0;
+}
+.btn--icon.btn--sm { width: var(--height-sm); }
+.btn--icon.btn--lg { width: var(--height-lg); }
+
+.btn svg {
+  width: var(--text-xl);
+  height: var(--text-xl);
+  flex-shrink: 0;
+}

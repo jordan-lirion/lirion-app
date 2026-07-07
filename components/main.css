@@ -1,0 +1,20 @@
+/* ============================================================
+   MAIN.CSS — Single CSS entry point
+   Import order matters: theme first, then components.
+   Screens only need: <link rel="stylesheet" href="../components/main.css">
+   ============================================================ */
+
+/* 0. Google Fonts — must come before all other @imports */
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800;900&display=swap');
+
+/* 1. Tokens & layout system */
+@import './theme.css';
+
+/* 2. Components */
+@import './button/button.css';
+@import './form/form.css';
+@import './card/card.css';
+@import './caption/caption.css';
+@import './avatar/avatar.css';
+@import './badge/badge.css';
+@import './card-training/card-training.css';

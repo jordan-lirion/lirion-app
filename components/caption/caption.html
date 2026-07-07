@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Caption — Preview</title>
+  <link rel="stylesheet" href="../main.css">
+  <style>
+    body {
+      background: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: var(--space-12);
+      min-height: 100vh;
+      padding: var(--space-10);
+    }
+    .preview-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-10);
+    }
+    .preview-label {
+      font-size: var(--text-xs);
+      color: var(--muted-foreground);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+      font-weight: var(--font-semibold);
+    }
+    .mascot-placeholder {
+      width: 3rem; height: 3rem;
+      border-radius: var(--radius-full);
+      background: var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Tail bottom-left -->
+  <div class="preview-item">
+    <div class="caption caption--tail-bottom-left">
+      <p class="caption__text">
+        <span class="caption__intro">Bienvenue sur Lirion !</span>
+        <strong>Entre ton email pour te connecter.</strong>
+      </p>
+    </div>
+    <div class="mascot-placeholder">🦁</div>
+    <span class="preview-label">tail-bottom-left</span>
+  </div>
+
+  <!-- Tail bottom-right -->
+  <div class="preview-item">
+    <div class="caption caption--tail-bottom-right">
+      <p class="caption__text">
+        <span class="caption__intro">Super travail !</span>
+        <strong>Continue comme ça.</strong>
+      </p>
+    </div>
+    <div class="mascot-placeholder">🦁</div>
+    <span class="preview-label">tail-bottom-right</span>
+  </div>
+
+  <!-- Tail top-left -->
+  <div class="preview-item">
+    <div class="mascot-placeholder">🦁</div>
+    <div class="caption caption--tail-top-left">
+      <p class="caption__text">
+        <span class="caption__intro">Tu y es presque !</span>
+        <strong>Encore un petit effort.</strong>
+      </p>
+    </div>
+    <span class="preview-label">tail-top-left</span>
+  </div>
+
+  <!-- Tail top-right -->
+  <div class="preview-item">
+    <div class="mascot-placeholder">🦁</div>
+    <div class="caption caption--tail-top-right">
+      <p class="caption__text">
+        <strong>Félicitations ! Tu as réussi.</strong>
+      </p>
+    </div>
+    <span class="preview-label">tail-top-right</span>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,474 @@
+/* ============================================================
+   THEME.CSS — Design Tokens & Layout System
+   Source of truth for all visual values in the project.
+   All components and screens import this file via main.css.
+   ============================================================ */
+
+/* ============================================================
+   DESIGN TOKENS — single :root, no duplicates
+   ============================================================ */
+:root {
+  --radius: 0.625rem;
+
+  /* ── Backgrounds ──────────────────────────────────────────── */
+  --background:             oklch(1 0 0);
+  --muted:                  oklch(0.97 0 0);
+
+  /* ── Foregrounds ──────────────────────────────────────────── */
+  --foreground:             oklch(0.145 0 0);
+  --muted-foreground:       oklch(0.556 0 0);
+
+  /* ── Primary (Lirion yellow) ──────────────────────────────── */
+  --primary:                oklch(0.852 0.199 91.936);
+  --primary-foreground:     oklch(0.286 0.066 53.813);
+
+  /* ── Border / Focus ───────────────────────────────────────── */
+  --border:                 oklch(0.922 0 0);
+  --ring:                   oklch(0.708 0 0);
+
+  /* ── Semantic surfaces ────────────────────────────────────── */
+  --primary-muted:                oklch(0.962 0.059 95.617);  /* amber-100 */
+  --primary-muted-foreground:     oklch(0.555 0.163 48.998);  /* amber-700 */
+
+  --success:                    oklch(0.627 0.194 149.558); /* green-600 */
+  --success-foreground:         oklch(0.985 0 0);
+  --success-muted:              oklch(0.962 0.063 149.558); /* green-100 */
+  --success-muted-foreground:   oklch(0.548 0.166 150.069); /* green-700 */
+
+  --warning:                    oklch(0.646 0.222 41.116);  /* orange-600 */
+  --warning-foreground:         oklch(0.985 0 0);
+  --warning-muted:              oklch(0.954 0.038 75.164);  /* orange-100 */
+  --warning-muted-foreground:   oklch(0.553 0.195 38.402);  /* orange-700 */
+
+  --destructive:                oklch(0.577 0.245 27.325);  /* red-600   */
+  --destructive-foreground:     oklch(0.985 0 0);
+  --destructive-muted:          oklch(0.936 0.032 17.717);  /* red-100   */
+  --destructive-muted-foreground: oklch(0.505 0.213 27.518); /* red-700  */
+
+  /* ── States ───────────────────────────────────────────────── */
+  --disabled-bg: oklch(0.985 0 0);
+  --disabled-fg: oklch(0.87 0 0);
+  --overlay:     oklch(0 0 0 / 0.5);
+
+  /* ── Data visualization ───────────────────────────────────── */
+  --chart-1: oklch(0.623 0.214 259.815); /* blue-500 */
+  --chart-2: oklch(0.809 0.105 251.813); /* blue-300 */
+  --chart-3: oklch(0.488 0.243 264.376); /* blue-700 */
+  --chart-4: oklch(0.882 0.059 254.128); /* blue-200 */
+  --chart-5: oklch(0.379 0.146 265.522); /* blue-900 */
+
+  /* ── Fonts ────────────────────────────────────────────────── */
+  --font-sans:    "Lexend", ui-sans-serif, system-ui, sans-serif;
+  --font-mono:    ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-primary: var(--font-sans);
+
+  /* ── Font weights ─────────────────────────────────────────── */
+  --font-regular:  400;
+  --font-medium:   500;
+  --font-semibold: 600;
+  --font-bold:     700;
+  --font-black:    900;
+
+  /* ── Text sizes ───────────────────────────────────────────── */
+  --text-xs:   0.6875rem;  /* 11px — micro labels              */
+  --text-sm:   0.75rem;    /* 12px — badges, secondaire        */
+  --text-md:   0.8125rem;  /* 13px — dense (tables, dropdowns) */
+  --text-base: 0.875rem;   /* 14px — corps de texte            */
+  --text-lg:   0.9375rem;  /* 15px — emphase légère            */
+  --text-xl:   1rem;       /* 16px — sous-titres               */
+  --text-2xl:  1.25rem;    /* 20px — titres de page            */
+  --text-3xl:  1.5rem;     /* 24px — titres majeurs            */
+  --text-4xl:  2rem;       /* 32px — display                   */
+
+  /* ── Line heights ─────────────────────────────────────────── */
+  --leading-tight:  1.2;
+  --leading-normal: 1.5;
+  --leading-loose:  1.8;
+
+  /* ── Letter spacing ───────────────────────────────────────── */
+  --tracking-tight:  -0.025em;
+  --tracking-normal:  0em;
+  --tracking-wide:    0.05em;
+  --tracking-wider:   0.1em;
+
+  /* ── Spacing scale (base 4px) ────────────────────────────── */
+  --space-0:   0;
+  --space-1:   0.25rem;   /*  4px */
+  --space-2:   0.5rem;    /*  8px */
+  --space-3:   0.75rem;   /* 12px */
+  --space-4:   1rem;      /* 16px */
+  --space-5:   1.25rem;   /* 20px */
+  --space-6:   1.5rem;    /* 24px */
+  --space-8:   2rem;      /* 32px */
+  --space-10:  2.5rem;    /* 40px */
+  --space-12:  3rem;      /* 48px */
+  --space-16:  4rem;      /* 64px */
+  --space-20:  5rem;      /* 80px */
+  --space-24:  6rem;      /* 96px */
+
+  /* ── Heights ──────────────────────────────────────────────── */
+  --height-sm: 2rem;    /* 32px */
+  --height-md: 2.25rem; /* 36px */
+  --height-lg: 2.5rem;  /* 40px */
+  --height-xl: 4rem;    /* 64px */
+
+  /* ── Border radius ────────────────────────────────────────── */
+  --radius-none: 0;
+  --radius-sm:   calc(var(--radius) - 4px);
+  --radius-md:   calc(var(--radius) - 2px);
+  --radius-lg:   var(--radius);
+  --radius-xl:   calc(var(--radius) + 4px);
+  --radius-2xl:  2rem;
+  --radius-full: 9999px;
+
+  /* ── Shadows ──────────────────────────────────────────────── */
+  --shadow-sm: 0 1px 2px 0 oklch(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px oklch(0 0 0 / 0.08), 0 2px 4px -2px oklch(0 0 0 / 0.08);
+  --shadow-lg: 0 10px 15px -3px oklch(0 0 0 / 0.1), 0 4px 6px -4px oklch(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 40px -4px oklch(0 0 0 / 0.12);
+
+  /* ── Application layout ───────────────────────────────────── */
+  --header-height: 3.375rem;
+
+  /* ── Durations ────────────────────────────────────────────── */
+  --duration-fast:    0.15s;
+  --duration-normal:  0.2s;
+  --duration-slow:    0.4s;
+  --duration-slower:  0.6s;
+
+  /* ── Easing ───────────────────────────────────────────────── */
+  --easing-default: ease;
+  --easing-spring:  cubic-bezier(0.34, 1.56, 0.64, 1);
+  --easing-in:      cubic-bezier(0.4, 0, 1, 1);
+  --easing-out:     cubic-bezier(0, 0, 0.2, 1);
+
+  /* ── Z-index ──────────────────────────────────────────────── */
+  --z-base:    0;
+  --z-above:   10;
+  --z-overlay: 100;
+  --z-modal:   200;
+  --z-toast:   300;
+  --z-top:     9999;
+
+  /* ── Training colors ──────────────────────────────────────── */
+  --training-larma-100: oklch(0.782 0.133 42.140);
+  --training-larma-200: oklch(0.727 0.176 41.204);
+  --training-larma-300: oklch(0.683 0.165 41.206);
+
+  --training-graphogame-100: oklch(0.861 0.159 86.336);
+  --training-graphogame-200: oklch(0.827 0.171 80.526);
+  --training-graphogame-300: oklch(0.777 0.161 80.372);
+
+  --training-memoson-100: oklch(0.809 0.143 171.443);
+  --training-memoson-200: oklch(0.769 0.158 166.764);
+  --training-memoson-300: oklch(0.722 0.148 166.762);
+
+  --training-fus-seg-100: oklch(0.797 0.123 194.973);
+  --training-fus-seg-200: oklch(0.754 0.129 194.769);
+  --training-fus-seg-300: oklch(0.709 0.121 194.769);
+
+  --training-phonemix-100: oklch(0.776 0.140 231.404);
+  --training-phonemix-200: oklch(0.728 0.161 237.847);
+  --training-phonemix-300: oklch(0.685 0.151 237.661);
+
+  --training-ran-100: oklch(0.734 0.137 261.618);
+  --training-ran-200: oklch(0.659 0.182 261.172);
+  --training-ran-300: oklch(0.621 0.170 261.184);
+
+  --training-loh-100: oklch(0.734 0.160 298.604);
+  --training-loh-200: oklch(0.657 0.208 296.303);
+  --training-loh-300: oklch(0.617 0.196 296.252);
+
+  --training-maeva-100: oklch(0.773 0.174 316.126);
+  --training-maeva-200: oklch(0.712 0.225 315.592);
+  --training-maeva-300: oklch(0.669 0.212 315.576);
+
+  --training-switchipido-100: oklch(0.801 0.155 340.094);
+  --training-switchipido-200: oklch(0.750 0.201 341.583);
+  --training-switchipido-300: oklch(0.706 0.188 341.757);
+
+  --training-elor-100: oklch(0.802 0.120 4.274);
+  --training-elor-200: oklch(0.749 0.159 6.528);
+  --training-elor-300: oklch(0.704 0.149 6.816);
+
+  --training-rech-visuelle-100: oklch(0.701 0.161 282.227);
+  --training-rech-visuelle-200: oklch(0.612 0.214 278.911);
+  --training-rech-visuelle-300: oklch(0.575 0.201 278.988);
+}
+
+/* ============================================================
+   GAME CANVAS TOKENS
+   ============================================================ */
+:root {
+  /* 16:9 landscape — mobile HD reference canvas */
+  --game-width:      1280px;
+  --game-height:      720px;
+  --game-aspect:     16 / 9;
+
+  /* Safe-area insets (Dynamic Island, notch, home indicator) */
+  --safe-top:    env(safe-area-inset-top,    0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left:   env(safe-area-inset-left,   0px);
+  --safe-right:  env(safe-area-inset-right,  0px);
+
+  /* Screen layout structural tokens */
+  --screen-header-h:     5rem;
+  --screen-footer-h:     5rem;
+  --screen-inset-top:    max(0.5rem, var(--safe-top));
+  --screen-inset-bottom: max(0.5rem, var(--safe-bottom));
+  --screen-inset-left:   max(3rem,   var(--safe-left));
+  --screen-inset-right:  max(3rem,   var(--safe-right));
+}
+
+/* ============================================================
+   LAYOUT SYSTEM — Reusable classes for all screens
+   ============================================================ */
+
+/* --- Reset & base ------------------------------------------ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #000;
+  font-family: var(--font-primary);
+  font-size: 16px;
+  color: var(--foreground);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* --- Game viewport ----------------------------------------- */
+.game-viewport {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+}
+
+/* Letterbox container that preserves 16:9 */
+.game-canvas {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: var(--game-aspect);
+  max-width: calc(100vh * (16 / 9));
+  max-height: calc(100vw * (9 / 16));
+  overflow: hidden;
+}
+
+/* --- Screen ---------------------------------------------- */
+.screen {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* --- Flex utilities --------------------------------------- */
+.flex         { display: flex; }
+.flex-col     { display: flex; flex-direction: column; }
+.flex-row     { display: flex; flex-direction: row; }
+.items-start  { align-items: flex-start; }
+.items-center { align-items: center; }
+.items-end    { align-items: flex-end; }
+.justify-start   { justify-content: flex-start; }
+.justify-center  { justify-content: center; }
+.justify-end     { justify-content: flex-end; }
+.justify-between { justify-content: space-between; }
+.gap-1  { gap: var(--space-1); }
+.gap-2  { gap: var(--space-2); }
+.gap-3  { gap: var(--space-3); }
+.gap-4  { gap: var(--space-4); }
+.gap-6  { gap: var(--space-6); }
+.gap-8  { gap: var(--space-8); }
+.flex-1    { flex: 1; }
+.flex-wrap { flex-wrap: wrap; }
+
+/* --- Positioning utilities -------------------------------- */
+.relative { position: relative; }
+.absolute { position: absolute; }
+.fixed    { position: fixed; }
+.inset-0  { inset: 0; }
+.z-above   { z-index: var(--z-above); }
+.z-overlay { z-index: var(--z-overlay); }
+.z-modal   { z-index: var(--z-modal); }
+
+/* --- Sizing utilities ------------------------------------- */
+.w-full { width: 100%; }
+.h-full { height: 100%; }
+.w-fit  { width: fit-content; }
+.h-fit  { height: fit-content; }
+
+/* --- Lucide icons ----------------------------------------- */
+/* After createIcons(), SVGs keep [data-lucide]. width/height: 1em
+   lets any .text-* class control the icon size via font-size.  */
+[data-lucide] {
+  width: 1em;
+  height: 1em;
+  flex-shrink: 0;
+  stroke-width: 2.5;
+}
+
+/* --- Text utilities --------------------------------------- */
+.text-xs    { font-size: var(--text-xs); }
+.text-sm    { font-size: var(--text-sm); }
+.text-base  { font-size: var(--text-base); }
+.text-md    { font-size: var(--text-md); }
+.text-lg    { font-size: var(--text-lg); }
+.text-xl    { font-size: var(--text-xl); }
+.text-2xl   { font-size: var(--text-2xl); }
+.text-3xl   { font-size: var(--text-3xl); }
+.text-center { text-align: center; }
+.text-left   { text-align: left; }
+.text-right  { text-align: right; }
+.font-bold    { font-weight: var(--font-bold); }
+.font-medium  { font-weight: var(--font-medium); }
+.uppercase    { text-transform: uppercase; }
+.tracking-wide { letter-spacing: var(--tracking-wide); }
+
+/* --- Overflow -------------------------------------------- */
+.overflow-hidden { overflow: hidden; }
+.overflow-auto   { overflow: auto; }
+
+/* --- Pointer events -------------------------------------- */
+.pointer-none { pointer-events: none; }
+.pointer-all  { pointer-events: all; }
+
+/* --- Visibility ------------------------------------------ */
+.hidden     { display: none !important; }
+.invisible  { visibility: hidden; }
+.opacity-0  { opacity: 0; }
+.opacity-50 { opacity: 0.5; }
+
+/* ============================================================
+   SCREEN LAYOUT SYSTEM
+   Two reusable layouts for all game screens.
+
+   Layout 1 — single body:
+     <div class="screen screen-layout">
+       <header class="screen-header">
+         <div class="bar-start">…</div>
+         <div class="bar-center">…</div>
+         <div class="bar-end">…</div>
+       </header>
+       <main class="screen-body">…</main>
+       <footer class="screen-footer">
+         <div class="bar-start">…</div>
+         <div class="bar-center">…</div>
+         <div class="bar-end">…</div>
+       </footer>
+     </div>
+
+   Layout 2 — split body (add .screen-body--split):
+       <main class="screen-body screen-body--split">
+         <div class="screen-pane">…</div>
+         <div class="screen-pane">…</div>
+       </main>
+   ============================================================ */
+
+/* ── Layout wrapper ──────────────────────────────────────────
+   Compose with .screen: class="screen screen-layout"
+   ----------------------------------------------------------- */
+.screen-layout {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Header bar ─────────────────────────────────────────────  */
+.screen-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--screen-header-h);
+  flex-shrink: 0;
+  padding: var(--space-6);
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Footer bar ─────────────────────────────────────────────  */
+.screen-footer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--screen-footer-h);
+  flex-shrink: 0;
+  padding: var(--space-4);
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Body — Layout 1: single centered pane ──────────────────  */
+.screen-body {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-left: var(--space-12);
+  padding-right: var(--space-12);
+}
+
+/* ── Body — Layout 2: two equal panes side by side ──────────  */
+.screen-body--split {
+  flex-direction: row;
+  align-items: stretch;
+  overflow: hidden;
+}
+
+/* Half-pane: centers its own content independently */
+.screen-pane {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* ── Bar slot utilities ──────────────────────────────────────
+   .bar-start  — left side
+   .bar-center — middle (grows to fill available space)
+   .bar-end    — right side
+   ----------------------------------------------------------- */
+.bar-start {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+.bar-center {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex: 1;
+  justify-content: center;
+}
+
+.bar-end {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}

@@ -10,6 +10,7 @@
   padding: 0;
   flex-shrink: 0;
   overflow: visible;
+  position: relative;
   cursor: pointer;
   outline: 4px solid transparent;
   outline-offset: 4px;

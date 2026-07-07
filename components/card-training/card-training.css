@@ -9,8 +9,7 @@
   background: var(--card-training-bg, var(--muted));
   padding: 0;
   flex-shrink: 0;
-  overflow: visible;
-  position: relative;
+  overflow: hidden;
   cursor: pointer;
   outline: 4px solid transparent;
   outline-offset: 4px;
@@ -59,20 +58,6 @@
   width: 8vw;
   height: 8vw;
   filter: brightness(0) invert(1);
-}
-
-/* ── CTA button — straddles the bottom edge of the card ─────── */
-.card-training__cta {
-  position: absolute;
-  bottom: calc(-1 * var(--height-sm) / 2);
-  left: 50%;
-  transform: translateX(-50%);
-  display: none;
-  pointer-events: all;
-}
-
-.card-training--active .card-training__cta {
-  display: inline-flex;
 }
 
 /* ── Footer ──────────────────────────────────────────────────── */

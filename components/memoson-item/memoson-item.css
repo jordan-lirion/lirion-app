@@ -11,7 +11,7 @@
 
 .memoson-item__text {
   font-size: var(--text-2xl);
-  font-weight: var(--font-bold);
+  font-weight: var(--font-medium);
   line-height: 1;
   letter-spacing: var(--tracking-wide);
 }

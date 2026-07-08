@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <!-- === PWA / Web App iOS === -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Lirion">
+  <meta name="theme-color" content="#facc15">
+  <link rel="apple-touch-icon" href="assets/icons/icon-180.png">
+  <link rel="manifest" href="manifest.json">
+  <!-- === /PWA === -->
+  <title>Lirion — Phonemix · Identification</title>
+  <link rel="stylesheet" href="components/main.css">
+  <style>
+    .game-canvas {
+      background: var(--training-phonemix-200);
+    }
+
+    /* ── Title ─────────────────────────────────────────────────── */
+    .phonemix-id__title {
+      font-size: var(--text-xl);
+      font-weight: var(--font-semibold);
+      color: oklch(1 0 0);
+    }
+
+    /* ── Pause button — phonemix-300 bg, icône blanche ────────── */
+    .screen-header .btn--icon {
+      background: var(--training-phonemix-300);
+      color: oklch(1 0 0);
+    }
+    .screen-header .btn--icon:hover {
+      background: color-mix(in oklab, var(--training-phonemix-300) 85%, black);
+    }
+
+    /* ── Count — phonemix-300 bg, chiffre blanc ─────────────────── */
+    .count {
+      background: var(--training-phonemix-300);
+      color: oklch(1 0 0);
+    }
+
+    /* ── Time — camembert, fill = background, bg = phonemix-300 ── */
+    .time {
+      --time-fill: var(--background);
+      --time-bg:   var(--training-phonemix-300);
+      border: solid var(--space-1) var(--training-phonemix-300);
+    }
+
+    /* ── Help — image zoomée + ombres ──────────────────────────── */
+    .help {
+      box-shadow:
+        0 3px 8px oklch(0 0 0 / 0.12),
+        inset 0 -1px 4px oklch(0 0 0 / 0.07);
+    }
+
+    /* ── Footer ancré en bas ───────────────────────────────────── */
+    .screen-layout {
+      justify-content: space-between;
+    }
+  </style>
+</head>
+<body>
+  <!-- Dialog — pause -->
+  <div class="dialog-overlay" id="pause-overlay">
+    <button class="btn btn--icon btn--primary dialog__close" id="btn-pause-close" aria-label="Reprendre">
+      <i data-lucide="x" class="text-xl"></i>
+    </button>
+    <div class="dialog">
+      <div class="dialog__content">
+        <h2 class="dialog__title">Ton entraînement est en pause.</h2>
+      </div>
+      <div class="dialog__footer">
+        <button class="btn btn--default btn--lg btn--full" id="btn-pause-resume">
+          <i data-lucide="play"></i>
+          Reprendre
+        </button>
+        <button class="btn btn--outline btn--lg btn--full" id="btn-pause-quit">
+          Quitter
+        </button>
+        <p class="dialog__text text-center">Tu devras recommencer à zéro.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dialog — aide Phonemix Identification -->
+  <div class="dialog-overlay" id="help-overlay">
+    <button class="btn btn--icon btn--primary dialog__close" id="btn-dialog-close" aria-label="Fermer">
+      <i data-lucide="x" class="text-xl"></i>
+    </button>
+    <div class="dialog">
+      <div class="dialog__content">
+        <p class="dialog__text">Écoute les deux lignes de son.<br>Trouve celui qui est différent et tape dessus.</p>
+      </div>
+      <div class="dialog__footer">
+        <button class="btn btn--default btn--lg btn--full" id="btn-dialog-start">Démarrer</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="game-viewport">
+    <div class="game-canvas">
+      <div class="screen screen-layout">
+
+        <header class="screen-header">
+          <div class="bar-start">
+            <button class="btn btn--icon btn--primary" id="btn-pause" aria-label="Pause">
+              <i data-lucide="pause" fill="#fff" class="text-2xl"></i>
+            </button>
+            <span class="phonemix-id__title">Phonemix - Identification</span>
+          </div>
+          <div class="bar-end">
+            <div class="count" id="score">3</div>
+            <div class="time"></div>
+          </div>
+        </header>
+
+        <main class="screen-body">
+          <!-- screen body à venir -->
+        </main>
+
+        <footer class="screen-footer">
+          <div class="bar-start">
+            <div class="help">
+              <img src="assets/illustration/think.png" class="help__img" alt="Aide">
+            </div>
+          </div>
+        </footer>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script type="module" src="components/main.js"></script>
+  <script>
+    lucide.createIcons();
+
+    // Dialog — aide
+    const helpOverlay  = document.getElementById('help-overlay');
+    const btnHelpClose = document.getElementById('btn-dialog-close');
+    const btnHelpStart = document.getElementById('btn-dialog-start');
+
+    function openHelp()  { helpOverlay.classList.add('dialog-overlay--open'); }
+    function closeHelp() { helpOverlay.classList.remove('dialog-overlay--open'); }
+
+    document.querySelector('.help').addEventListener('click', openHelp);
+    btnHelpClose.addEventListener('click', closeHelp);
+    btnHelpStart.addEventListener('click', closeHelp);
+    helpOverlay.addEventListener('click', e => { if (e.target === helpOverlay) closeHelp(); });
+
+    // Dialog — pause
+    const pauseOverlay  = document.getElementById('pause-overlay');
+    const btnPause      = document.getElementById('btn-pause');
+    const btnPauseClose = document.getElementById('btn-pause-close');
+    const btnResume     = document.getElementById('btn-pause-resume');
+    const btnQuit       = document.getElementById('btn-pause-quit');
+
+    function openPause()  { pauseOverlay.classList.add('dialog-overlay--open'); }
+    function closePause() { pauseOverlay.classList.remove('dialog-overlay--open'); }
+
+    btnPause.addEventListener('click', openPause);
+    btnPauseClose.addEventListener('click', closePause);
+    btnResume.addEventListener('click', closePause);
+    btnQuit.addEventListener('click', () => { window.location.href = 'home.html'; });
+    pauseOverlay.addEventListener('click', e => { if (e.target === pauseOverlay) closePause(); });
+  </script>
+</body>
+</html>

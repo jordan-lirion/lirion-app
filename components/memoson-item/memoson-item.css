@@ -3,7 +3,7 @@
   width: calc((100vw - 2 * var(--space-5) - 7 * var(--space-3)) / 8);
   aspect-ratio: 4 / 3;
   flex-shrink: 0;
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-2xl);
   display: flex;
   align-items: center;
   justify-content: center;

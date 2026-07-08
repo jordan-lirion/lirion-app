@@ -135,6 +135,28 @@
   </style>
 </head>
 <body>
+  <!-- Dialog — pause -->
+  <div class="dialog-overlay" id="pause-overlay">
+    <button class="btn btn--icon btn--primary dialog__close" id="btn-pause-close" aria-label="Reprendre">
+      <i data-lucide="x" class="text-xl"></i>
+    </button>
+    <div class="dialog">
+      <div class="dialog__content">
+        <h2 class="dialog__title">Ton entraînement est en pause.</h2>
+      </div>
+      <div class="dialog__footer">
+        <button class="btn btn--default btn--lg btn--full" id="btn-pause-resume">
+          <i data-lucide="play"></i>
+          Reprendre
+        </button>
+        <button class="btn btn--outline btn--lg btn--full" id="btn-pause-quit">
+          Quitter
+        </button>
+        <p class="dialog__text text-center">Tu devras recommencer à zéro.</p>
+      </div>
+    </div>
+  </div>
+
   <!-- Dialog — aide Memoson Différences -->
   <div class="dialog-overlay" id="help-overlay">
     <button class="btn btn--icon btn--primary dialog__close" id="btn-dialog-close" aria-label="Fermer">
@@ -156,9 +178,9 @@
 
         <header class="screen-header">
           <div class="bar-start">
-            <a href="home.html" class="btn btn--icon btn--primary" aria-label="Pause">
+            <button class="btn btn--icon btn--primary" id="btn-pause" aria-label="Pause">
               <i data-lucide="pause" fill="#fff" class="text-2xl"></i>
-            </a>
+            </button>
             <span class="memoson-d__title">Memoson - Différences</span>
           </div>
           <div class="bar-end">
@@ -245,17 +267,34 @@
       this.classList.toggle('btn-play--active');
     });
 
-    const overlay   = document.getElementById('help-overlay');
-    const closeBtn  = document.getElementById('btn-dialog-close');
-    const startBtn  = document.getElementById('btn-dialog-start');
+    // Dialog — aide
+    const helpOverlay = document.getElementById('help-overlay');
+    const btnHelpClose = document.getElementById('btn-dialog-close');
+    const btnHelpStart = document.getElementById('btn-dialog-start');
 
-    function openDialog()  { overlay.classList.add('dialog-overlay--open'); }
-    function closeDialog() { overlay.classList.remove('dialog-overlay--open'); }
+    function openHelp()  { helpOverlay.classList.add('dialog-overlay--open'); }
+    function closeHelp() { helpOverlay.classList.remove('dialog-overlay--open'); }
 
-    document.querySelector('.help').addEventListener('click', openDialog);
-    closeBtn.addEventListener('click', closeDialog);
-    startBtn.addEventListener('click', closeDialog);
-    overlay.addEventListener('click', e => { if (e.target === overlay) closeDialog(); });
+    document.querySelector('.help').addEventListener('click', openHelp);
+    btnHelpClose.addEventListener('click', closeHelp);
+    btnHelpStart.addEventListener('click', closeHelp);
+    helpOverlay.addEventListener('click', e => { if (e.target === helpOverlay) closeHelp(); });
+
+    // Dialog — pause
+    const pauseOverlay  = document.getElementById('pause-overlay');
+    const btnPause      = document.getElementById('btn-pause');
+    const btnPauseClose = document.getElementById('btn-pause-close');
+    const btnResume     = document.getElementById('btn-pause-resume');
+    const btnQuit       = document.getElementById('btn-pause-quit');
+
+    function openPause()  { pauseOverlay.classList.add('dialog-overlay--open'); }
+    function closePause() { pauseOverlay.classList.remove('dialog-overlay--open'); }
+
+    btnPause.addEventListener('click', openPause);
+    btnPauseClose.addEventListener('click', closePause);
+    btnResume.addEventListener('click', closePause);
+    btnQuit.addEventListener('click', () => { window.location.href = 'home.html'; });
+    pauseOverlay.addEventListener('click', e => { if (e.target === pauseOverlay) closePause(); });
   </script>
 </body>
 </html>

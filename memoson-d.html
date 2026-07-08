@@ -68,6 +68,41 @@
       background: color-mix(in oklab, var(--background) 85%, black);
     }
 
+    /* ── Play button — état actif ────────────────────────────────── */
+    .screen-footer .btn-play--active {
+      background: var(--training-memoson-300);
+      color: oklch(1 0 0);
+    }
+    .screen-footer .btn-play--active:hover {
+      background: color-mix(in oklab, var(--training-memoson-300) 85%, black);
+    }
+
+    /* ── Audio wave icon ─────────────────────────────────────────── */
+    .audio-bars {
+      width: 1em;
+      height: 1em;
+      display: none;
+      flex-shrink: 0;
+    }
+
+    .btn-play--active [data-lucide] { display: none; }
+    .btn-play--active .audio-bars   { display: block; }
+
+    .audio-bars .bar {
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+
+    .btn-play--active .audio-bars .bar:nth-child(1) { animation: audio-bar 0.55s 0.00s ease-in-out infinite alternate; }
+    .btn-play--active .audio-bars .bar:nth-child(2) { animation: audio-bar 0.70s 0.18s ease-in-out infinite alternate; }
+    .btn-play--active .audio-bars .bar:nth-child(3) { animation: audio-bar 0.60s 0.08s ease-in-out infinite alternate; }
+    .btn-play--active .audio-bars .bar:nth-child(4) { animation: audio-bar 0.80s 0.28s ease-in-out infinite alternate; }
+
+    @keyframes audio-bar {
+      from { transform: scaleY(0.15); }
+      to   { transform: scaleY(1); }
+    }
+
     /* ── Screen body — override pour la grille ─────────────────── */
     .screen-body {
       padding-top:    var(--screen-header-h);
@@ -164,8 +199,14 @@
             </div>
           </div>
           <div class="bar-end">
-            <button class="btn btn--icon btn--primary" aria-label="Jouer">
-              <i data-lucide="play" fill="oklch(0.722 0.148 166.762)" class="text-xl"></i>
+            <button class="btn btn--icon btn--primary btn-play" aria-label="Jouer">
+              <i data-lucide="play" class="text-xl"></i>
+              <svg class="audio-bars text-xl" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <rect class="bar" x="2"    y="0" width="2.5" height="24" rx="1.25"/>
+                <rect class="bar" x="7.5"  y="0" width="2.5" height="24" rx="1.25"/>
+                <rect class="bar" x="13"   y="0" width="2.5" height="24" rx="1.25"/>
+                <rect class="bar" x="18.5" y="0" width="2.5" height="24" rx="1.25"/>
+              </svg>
             </button>
           </div>
         </footer>
@@ -178,6 +219,10 @@
   <script type="module" src="components/main.js"></script>
   <script>
     lucide.createIcons();
+
+    document.querySelector('.btn-play').addEventListener('click', function () {
+      this.classList.toggle('btn-play--active');
+    });
   </script>
 </body>
 </html>

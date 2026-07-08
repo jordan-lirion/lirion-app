@@ -7,6 +7,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
 }
 
 .memoson-item__text {
@@ -40,4 +41,39 @@
   background: var(--training-memoson-300);
   box-shadow: inset 0px -4px 4px oklch(0 0 0 / 0.16);
   color: oklch(1 0 0);
+}
+
+/* ── Proposition — pending (cliquable, affiche ?) ────────────── */
+.memoson-item--proposition-pending {
+  background: var(--background);
+  box-shadow: inset 0 -4px 4px oklch(0 0 0 / 0.16);
+  border: solid var(--space-1) var(--training-memoson-300);
+  color: var(--training-memoson-300);
+  cursor: pointer;
+  transition: opacity var(--duration-fast) var(--easing-default);
+}
+.memoson-item--proposition-pending:hover  { opacity: 0.8; }
+.memoson-item--proposition-pending:active { opacity: 0.6; }
+
+/* ── Proposition — success ───────────────────────────────────── */
+.memoson-item--proposition-success {
+  background: var(--training-memoson-300);
+  box-shadow: inset 0px -4px 4px oklch(0 0 0 / 0.16);
+  border: solid var(--space-1) var(--success);
+  color: oklch(1 0 0);
+}
+
+/* ── Proposition — error ─────────────────────────────────────── */
+.memoson-item--proposition-error {
+  background: var(--training-memoson-300);
+  box-shadow: inset 0px -4px 4px oklch(0 0 0 / 0.16);
+  border: solid var(--space-1) var(--destructive);
+  color: oklch(1 0 0);
+}
+
+/* ── Badge-icon positionné en coin supérieur droit ───────────── */
+.memoson-item .badge-icon {
+  position: absolute;
+  top: var(--space-1);
+  right: var(--space-1);
 }

@@ -26,26 +26,28 @@
       color: oklch(1 0 0);
     }
 
-    /* ── Pause button — memoson-300 bg, icône blanche ─────────── */
+    /* ── Pause button ──────────────────────────────────────────── */
     .screen-header .btn--icon {
-      background: var(--training-memoson-300);
+      background: var(--training-memoson-200);
+      border: solid 2px var(--training-memoson-300);
       color: oklch(1 0 0);
     }
     .screen-header .btn--icon:hover {
-      background: color-mix(in oklab, var(--training-memoson-300) 85%, black);
+      background: color-mix(in oklab, var(--training-memoson-200) 85%, black);
     }
 
-    /* ── Count — memoson-300 bg, chiffre blanc ─────────────────── */
+    /* ── Count ──────────────────────────────────────────────────── */
     .count {
-      background: var(--training-memoson-300);
+      background: var(--training-memoson-200);
+      border: solid 2px var(--training-memoson-300);
       color: oklch(1 0 0);
     }
 
-    /* ── Time — camembert plein, fill = background ──────────────── */
+    /* ── Time ───────────────────────────────────────────────────── */
     .time {
       --time-fill: var(--background);
-      --time-bg:   var(--training-memoson-300);
-      border: solid var(--space-1) var(--training-memoson-300);
+      --time-bg:   var(--training-memoson-200);
+      border: solid 2px var(--training-memoson-300);
     }
 
     /* ── Help — image zoomée + ombres ──────────────────────────── */

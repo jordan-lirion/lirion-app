@@ -26,26 +26,28 @@
       color: oklch(1 0 0);
     }
 
-    /* ── Pause button — phonemix-300 bg, icône blanche ────────── */
+    /* ── Pause button ──────────────────────────────────────────── */
     .screen-header .btn--icon {
-      background: var(--training-phonemix-300);
+      background: var(--training-phonemix-200);
+      border: solid 2px var(--training-phonemix-300);
       color: oklch(1 0 0);
     }
     .screen-header .btn--icon:hover {
-      background: color-mix(in oklab, var(--training-phonemix-300) 85%, black);
+      background: color-mix(in oklab, var(--training-phonemix-200) 85%, black);
     }
 
-    /* ── Count — phonemix-300 bg, chiffre blanc ─────────────────── */
+    /* ── Count ──────────────────────────────────────────────────── */
     .count {
-      background: var(--training-phonemix-300);
+      background: var(--training-phonemix-200);
+      border: solid 2px var(--training-phonemix-300);
       color: oklch(1 0 0);
     }
 
-    /* ── Time — camembert, fill = background, bg = phonemix-300 ── */
+    /* ── Time ───────────────────────────────────────────────────── */
     .time {
       --time-fill: var(--background);
-      --time-bg:   var(--training-phonemix-300);
-      border: solid var(--space-1) var(--training-phonemix-300);
+      --time-bg:   var(--training-phonemix-200);
+      border: solid 2px var(--training-phonemix-300);
     }
 
     /* ── Help — image zoomée + ombres ──────────────────────────── */
@@ -58,6 +60,93 @@
     /* ── Footer ancré en bas ───────────────────────────────────── */
     .screen-layout {
       justify-content: space-between;
+    }
+
+    /* ── Field decorations ─────────────────────────────────────── */
+    :root {
+      --cage-h: calc((100vh - var(--screen-header-h) - var(--screen-footer-h)) / 2);
+      --cage-w: calc(var(--cage-h) / 2); /* cage SVG is 60×120, ratio 1:2 */
+    }
+
+    .phonemix-id__cage {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      height: var(--cage-h);
+      width: auto;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .phonemix-id__cage--left  { left:  var(--space-12); }
+    .phonemix-id__cage--right { right: var(--space-12); }
+
+    .phonemix-id__football {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      height: 100vh;
+      width: auto;
+      pointer-events: none;
+    }
+
+    .phonemix-id__letter {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: calc(var(--cage-h) * 0.9);
+      font-weight: var(--font-semibold);
+      color: var(--training-phonemix-300);
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .phonemix-id__letter--d { left:  calc(var(--space-16) + var(--cage-w) + var(--space-8)); }
+    .phonemix-id__letter--t { right: calc(var(--space-16) + var(--cage-w) + var(--space-8)); }
+
+    /* ── Feedback (but / oops) ─────────────────────────────────── */
+    .phonemix-id__feedback {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 65vw;
+      height: auto;
+      pointer-events: none;
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0);
+    }
+
+    .phonemix-id__feedback--show {
+      animation: feedback-pop 1.5s linear forwards;
+    }
+
+    @keyframes feedback-pop {
+      0%   { transform: translate(-50%, -50%) scale(0);    opacity: 1; }
+      18%  { transform: translate(-50%, -50%) scale(1.3);  opacity: 1; }
+      32%  { transform: translate(-50%, -50%) scale(0.88); opacity: 1; }
+      45%  { transform: translate(-50%, -50%) scale(1.1);  opacity: 1; }
+      56%  { transform: translate(-50%, -50%) scale(0.96); opacity: 1; }
+      65%  { transform: translate(-50%, -50%) scale(1);    opacity: 1; }
+      80%  { transform: translate(-50%, -50%) scale(1);    opacity: 1; }
+      100% { transform: translate(-50%, -50%) scale(0.6);  opacity: 0; }
+    }
+
+    /* ── Ball drop ─────────────────────────────────────────────── */
+    .phonemix-id__ball {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 5rem;
+      height: auto;
+      cursor: grab;
+      z-index: 1;
+      animation: ball-drop 1.8s var(--easing-spring) 0.2s both;
+    }
+
+    @keyframes ball-drop {
+      from { transform: translate(-50%, calc(-50vh - 150%)) rotate(0deg); }
+      to   { transform: translate(-50%, -50%) rotate(720deg); }
     }
   </style>
 </head>
@@ -117,7 +206,14 @@
         </header>
 
         <main class="screen-body">
-          <!-- screen body à venir -->
+          <img src="assets/illustration/phonemix/cage-left.svg"     class="phonemix-id__cage phonemix-id__cage--left"  alt="">
+          <span class="phonemix-id__letter phonemix-id__letter--d">D</span>
+          <img src="assets/illustration/phonemix/football-middle.svg" class="phonemix-id__football" alt="">
+          <span class="phonemix-id__letter phonemix-id__letter--t">T</span>
+          <img src="assets/illustration/phonemix/cage-right.svg"    class="phonemix-id__cage phonemix-id__cage--right" alt="">
+          <img src="assets/illustration/phonemix/ball-base.svg"    class="phonemix-id__ball" alt="">
+          <img src="assets/illustration/phonemix/but.svg"          class="phonemix-id__feedback" id="fb-but"  alt="">
+          <img src="assets/illustration/phonemix/oops.svg"         class="phonemix-id__feedback" id="fb-oops" alt="">
         </main>
 
         <footer class="screen-footer">
@@ -165,6 +261,127 @@
     btnResume.addEventListener('click', closePause);
     btnQuit.addEventListener('click', () => { window.location.href = 'home.html'; });
     pauseOverlay.addEventListener('click', e => { if (e.target === pauseOverlay) closePause(); });
+
+    // ── Ball drag ──────────────────────────────────────────────
+    const ball    = document.querySelector('.phonemix-id__ball');
+    const letterD = document.querySelector('.phonemix-id__letter--d');
+    const letterT = document.querySelector('.phonemix-id__letter--t');
+
+    const MAX_DRAG  = window.innerWidth * 0.3;
+    const MAX_SCALE = 1.3;
+    const THRESHOLD = MAX_DRAG * 0.35;
+    const spring    = getComputedStyle(document.documentElement).getPropertyValue('--easing-spring').trim();
+
+    const fbBut    = document.getElementById('fb-but');
+    const fbOops   = document.getElementById('fb-oops');
+    const cageLeft  = document.querySelector('.phonemix-id__cage--left');
+    const cageRight = document.querySelector('.phonemix-id__cage--right');
+
+    let dragging  = false;
+    let throwing  = false;
+    let originX   = 0;
+    let lastDragX = 0;
+
+    function showFeedback(el) {
+      el.classList.remove('phonemix-id__feedback--show');
+      void el.offsetWidth; // reflow pour relancer l'animation
+      el.classList.add('phonemix-id__feedback--show');
+      el.addEventListener('animationend', () => {
+        el.classList.remove('phonemix-id__feedback--show');
+      }, { once: true });
+    }
+
+    // Supprime l'animation CSS et fixe la balle à sa position de repos
+    function stopAnimation() {
+      ball.style.animation = 'none';
+      ball.style.transform = 'translate(-50%, -50%)';
+    }
+    ball.addEventListener('animationend', stopAnimation);
+    setTimeout(stopAnimation, 2200); // fallback si animationend ne se déclenche pas
+
+    function throwBall(direction) {
+      throwing = true;
+      const cage = direction === 'right' ? cageRight : cageLeft;
+      const rect = cage.getBoundingClientRect();
+      const cageCenterX = rect.left + rect.width / 2;
+      const targetDX = cageCenterX - window.innerWidth / 2;
+
+      // Ballon vole vers la cage et rétrécit
+      ball.style.transition = 'transform 0.45s ease-in';
+      ball.style.transform  = `translate(calc(-50% + ${targetDX}px), -50%) scale(0)`;
+
+      ball.addEventListener('transitionend', () => {
+        // Feedback but / oops
+        showFeedback(direction === 'right' ? fbBut : fbOops);
+
+        // Retour au centre avec spring
+        setTimeout(() => {
+          ball.style.transition = `transform 0.7s ${spring}`;
+          ball.style.transform  = 'translate(-50%, -50%)';
+        }, 350);
+
+        // Déverrouiller le drag une fois que l'animation de retour est terminée
+        setTimeout(() => { throwing = false; }, 1400);
+      }, { once: true });
+    }
+
+    function releaseBall() {
+      if (!dragging) return;
+      dragging = false;
+
+      // Réinitialiser les lettres
+      const tr = `transform 0.5s ${spring}`;
+      letterD.style.transition = tr;
+      letterT.style.transition = tr;
+      letterD.style.transform  = 'translateY(-50%) scale(1)';
+      letterT.style.transform  = 'translateY(-50%) scale(1)';
+
+      if (lastDragX > THRESHOLD) {
+        throwBall('right');
+      } else if (lastDragX < -THRESHOLD) {
+        throwBall('left');
+      } else {
+        ball.style.transition = `transform 0.5s ${spring}`;
+        ball.style.transform  = 'translate(-50%, -50%)';
+      }
+      lastDragX = 0;
+    }
+
+    ball.addEventListener('pointerdown', e => {
+      if (throwing) return;
+      stopAnimation();
+      dragging = true;
+      originX  = e.clientX;
+      ball.style.transition    = 'none';
+      letterD.style.transition = 'none';
+      letterT.style.transition = 'none';
+      ball.setPointerCapture(e.pointerId);
+      e.preventDefault();
+    });
+
+    document.addEventListener('pointermove', e => {
+      if (!dragging) return;
+      const dragX = e.clientX - originX;
+      const ratio = Math.min(Math.abs(dragX) / MAX_DRAG, 1);
+      const scale = 1 + ratio * (MAX_SCALE - 1);
+
+      lastDragX = dragX;
+      ball.style.transform = `translate(calc(-50% + ${dragX}px), -50%)`;
+
+      if (dragX > 0) {
+        letterT.style.transform = `translateY(-50%) scale(${scale})`;
+        letterD.style.transform = 'translateY(-50%) scale(1)';
+      } else if (dragX < 0) {
+        letterD.style.transform = `translateY(-50%) scale(${scale})`;
+        letterT.style.transform = 'translateY(-50%) scale(1)';
+      } else {
+        letterD.style.transform = 'translateY(-50%) scale(1)';
+        letterT.style.transform = 'translateY(-50%) scale(1)';
+      }
+    });
+
+    document.addEventListener('pointerup',     releaseBall);
+    document.addEventListener('pointercancel', releaseBall);
   </script>
 </body>
 </html>

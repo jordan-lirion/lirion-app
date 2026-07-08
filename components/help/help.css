@@ -1,0 +1,24 @@
+/* ── Help ───────────────────────────────────────────────────── */
+.help {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: var(--radius-full);
+  background: var(--background);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+  cursor: pointer;
+  transition: opacity var(--duration-fast) var(--easing-default);
+}
+
+.help:hover {
+  opacity: 0.85;
+}
+
+.help__img {
+  width: 70%;
+  height: 70%;
+  object-fit: contain;
+}

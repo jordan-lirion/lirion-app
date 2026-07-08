@@ -10,13 +10,11 @@
   width: 2.5rem;
   height: 2.5rem;
   border-radius: var(--radius-full);
-  padding: 3px;
   background: conic-gradient(
     var(--time-fill, var(--background)) 0deg,
     var(--time-fill, var(--background)) var(--time-angle),
     var(--time-bg,   var(--foreground)) var(--time-angle)
   );
-  background-clip: content-box;
   display: inline-flex;
   align-items: center;
   justify-content: center;

@@ -1,0 +1,49 @@
+/* ── Memoson Item ─────────────────────────────────────────────── */
+.memoson-item {
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-width: 0;
+}
+
+.memoson-item__text {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-bold);
+  line-height: 1;
+  letter-spacing: var(--tracking-wide);
+}
+
+/* ── Instruction — inner shadow top ─────────────────────────── */
+.memoson-item--instruction-on {
+  background: var(--background);
+  box-shadow: inset 0 3px 10px oklch(0 0 0 / 0.18);
+  color: var(--training-memoson-300);
+}
+
+.memoson-item--instruction-off {
+  background: var(--training-memoson-300);
+  box-shadow: inset 0 3px 10px oklch(0 0 0 / 0.22);
+  color: oklch(1 0 0);
+}
+
+/* ── Proposition — drop shadow down ─────────────────────────── */
+.memoson-item--proposition-on {
+  background: var(--background);
+  box-shadow: 0 4px 10px oklch(0 0 0 / 0.2);
+  color: var(--training-memoson-300);
+}
+
+.memoson-item--proposition-off {
+  background: var(--training-memoson-300);
+  box-shadow: 0 4px 10px oklch(0 0 0 / 0.2);
+  color: oklch(1 0 0);
+}
+
+/* proposition-off + texte = drop shadow + inner shadow */
+.memoson-item--proposition-off.memoson-item--activated {
+  box-shadow: 0 4px 10px oklch(0 0 0 / 0.2),
+              inset 0 3px 10px oklch(0 0 0 / 0.18);
+}

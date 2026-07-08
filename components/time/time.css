@@ -1,35 +1,15 @@
-/* ── Time — circular countdown gauge ───────────────────────── */
+/* ── Time — circular countdown gauge (conic-gradient) ────────── */
 .time {
   width: 2.5rem;
   height: 2.5rem;
   border-radius: var(--radius-full);
-  background: var(--background);
+  background: conic-gradient(
+    var(--time-fill, var(--background)) 0deg,
+    var(--time-fill, var(--background)) var(--time-angle, 270deg),
+    var(--time-bg,   var(--foreground)) var(--time-angle, 270deg)
+  );
   display: inline-flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  padding: 0.3rem;
-}
-
-.time__ring {
-  width: 100%;
-  height: 100%;
-  transform: rotate(-90deg);
-}
-
-.time__track {
-  stroke: oklch(0 0 0 / 0.1);
-}
-
-.time__progress {
-  stroke: var(--foreground);
-  /* circumference ≈ 2π × 15.9 ≈ 99.9 */
-  stroke-dasharray: 100 100;
-  stroke-dashoffset: 0;
-  stroke-linecap: round;
-  animation: time-countdown 300s linear forwards;
-}
-
-@keyframes time-countdown {
-  to { stroke-dashoffset: 100; }
 }

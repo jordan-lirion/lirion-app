@@ -19,10 +19,81 @@
       background: var(--training-memoson-100);
     }
 
+    /* ── Title ─────────────────────────────────────────────────── */
     .memoson-d__title {
       font-size: var(--text-lg);
       font-weight: var(--font-semibold);
-      color: var(--foreground);
+      color: oklch(1 0 0);
+    }
+
+    /* ── Pause button — memoson-300 bg, icône blanche ─────────── */
+    .screen-header .btn--icon {
+      background: var(--training-memoson-300);
+      color: oklch(1 0 0);
+    }
+    .screen-header .btn--icon:hover {
+      background: color-mix(in oklab, var(--training-memoson-300) 85%, black);
+    }
+
+    /* ── Count — memoson-300 bg, chiffre blanc ─────────────────── */
+    .count {
+      background: var(--training-memoson-300);
+      color: oklch(1 0 0);
+    }
+
+    /* ── Time — camembert plein, fill = background ──────────────── */
+    .time {
+      --time-fill:  var(--background);
+      --time-bg:    var(--training-memoson-300);
+      --time-angle: 360deg;
+    }
+
+    /* ── Help — image zoomée + ombres ──────────────────────────── */
+    .help {
+      box-shadow:
+        0 4px 14px oklch(0 0 0 / 0.22),
+        inset 0 -2px 6px oklch(0 0 0 / 0.1);
+    }
+    .help__img {
+      width: 90%;
+      height: 90%;
+    }
+
+    /* ── Play button — taille help, icône memoson-300, ombres ───── */
+    .screen-footer .btn--icon {
+      width: 3.5rem;
+      height: 3.5rem;
+      color: var(--training-memoson-300);
+      box-shadow:
+        0 4px 14px oklch(0 0 0 / 0.22),
+        inset 0 -2px 6px oklch(0 0 0 / 0.1);
+    }
+    .screen-footer .btn--icon:hover {
+      background: color-mix(in oklab, var(--background) 85%, black);
+    }
+
+    /* ── Screen body — override pour la grille ─────────────────── */
+    .screen-body {
+      padding-top:    var(--screen-header-h);
+      padding-bottom: var(--screen-footer-h);
+      padding-left:   var(--space-5);
+      padding-right:  var(--space-5);
+      overflow: hidden;
+    }
+
+    .memoson-d__grid {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      justify-content: center;
+    }
+
+    .memoson-d__row {
+      display: flex;
+      gap: var(--space-3);
+      align-items: center;
     }
   </style>
 </head>
@@ -33,24 +104,55 @@
 
         <header class="screen-header">
           <div class="bar-start">
-            <a href="home.html" class="btn btn--icon btn--primary" aria-label="Fermer">
-              <i data-lucide="x" class="text-xl"></i>
+            <a href="home.html" class="btn btn--icon btn--primary" aria-label="Pause">
+              <i data-lucide="pause" class="text-xl"></i>
             </a>
             <span class="memoson-d__title">Memoson - Différences</span>
           </div>
           <div class="bar-end">
-            <div class="count" id="score">0</div>
-            <div class="time">
-              <svg class="time__ring" viewBox="0 0 36 36">
-                <circle class="time__track"    cx="18" cy="18" r="15.9" fill="none" stroke-width="2.5"/>
-                <circle class="time__progress" cx="18" cy="18" r="15.9" fill="none" stroke-width="2.5"/>
-              </svg>
-            </div>
+            <div class="count" id="score">3</div>
+            <div class="time"></div>
           </div>
         </header>
 
         <main class="screen-body">
-          <!-- screen body à venir -->
+          <div class="memoson-d__grid">
+
+            <!-- Ligne 1 — Instructions -->
+            <div class="memoson-d__row">
+              <div class="memoson-item memoson-item--instruction-on"></div>
+              <div class="memoson-item memoson-item--instruction-off"></div>
+              <div class="memoson-item memoson-item--instruction-on">
+                <span class="memoson-item__text">FA</span>
+              </div>
+              <div class="memoson-item memoson-item--instruction-off">
+                <span class="memoson-item__text">SI</span>
+              </div>
+              <div class="memoson-item memoson-item--instruction-on">
+                <span class="memoson-item__text">MI</span>
+              </div>
+              <div class="memoson-item memoson-item--instruction-off"></div>
+            </div>
+
+            <!-- Ligne 2 — Propositions -->
+            <div class="memoson-d__row">
+              <div class="memoson-item memoson-item--proposition-on"></div>
+              <div class="memoson-item memoson-item--proposition-off"></div>
+              <div class="memoson-item memoson-item--proposition-on">
+                <span class="memoson-item__text">FA</span>
+              </div>
+              <div class="memoson-item memoson-item--proposition-off memoson-item--activated">
+                <span class="memoson-item__text">SI</span>
+              </div>
+              <div class="memoson-item memoson-item--proposition-on">
+                <span class="memoson-item__text">LA</span>
+              </div>
+              <div class="memoson-item memoson-item--proposition-off memoson-item--activated">
+                <span class="memoson-item__text">RE</span>
+              </div>
+            </div>
+
+          </div>
         </main>
 
         <footer class="screen-footer">

@@ -42,8 +42,9 @@
 /* Badge à cheval sous l'icon-circle */
 .card-training__icon-area .badge {
   margin-top: -0.75rem;
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--card-training-bg);
+  color: oklch(1 0 0);
+  border: var(--space-1) solid var(--card-training-dark);
 }
 
 .card-training__icon-circle {

@@ -135,6 +135,21 @@
   </style>
 </head>
 <body>
+  <!-- Dialog — aide Memoson Différences -->
+  <div class="dialog-overlay" id="help-overlay">
+    <div class="dialog">
+      <button class="btn btn--icon btn--ghost dialog__close" id="btn-dialog-close" aria-label="Fermer">
+        <i data-lucide="x" class="text-xl"></i>
+      </button>
+      <div class="dialog__content">
+        <p class="dialog__text">Écoute les deux lignes de son.<br>Trouve celui qui est différent et tape dessus.</p>
+      </div>
+      <div class="dialog__footer">
+        <button class="btn btn--default btn--lg btn--full" id="btn-dialog-start">Démarrer</button>
+      </div>
+    </div>
+  </div>
+
   <div class="game-viewport">
     <div class="game-canvas">
       <div class="screen screen-layout">
@@ -206,7 +221,7 @@
           </div>
           <div class="bar-end">
             <button class="btn btn--icon btn--primary btn-play" aria-label="Jouer">
-              <i data-lucide="play" class="text-2xl"></i>
+              <i data-lucide="play" fill="oklch(0.722 0.148 166.762)" class="text-2xl"></i>
               <svg class="audio-bars text-xl" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                 <rect class="bar" x="2"    y="0" width="2.5" height="24" rx="1.25"/>
                 <rect class="bar" x="7.5"  y="0" width="2.5" height="24" rx="1.25"/>
@@ -229,6 +244,18 @@
     document.querySelector('.btn-play').addEventListener('click', function () {
       this.classList.toggle('btn-play--active');
     });
+
+    const overlay   = document.getElementById('help-overlay');
+    const closeBtn  = document.getElementById('btn-dialog-close');
+    const startBtn  = document.getElementById('btn-dialog-start');
+
+    function openDialog()  { overlay.classList.add('dialog-overlay--open'); }
+    function closeDialog() { overlay.classList.remove('dialog-overlay--open'); }
+
+    document.querySelector('.help').addEventListener('click', openDialog);
+    closeBtn.addEventListener('click', closeDialog);
+    startBtn.addEventListener('click', closeDialog);
+    overlay.addEventListener('click', e => { if (e.target === overlay) closeDialog(); });
   </script>
 </body>
 </html>

@@ -1,3 +1,10 @@
+/* @property permet au browser d'interpoler --time-angle dans le conic-gradient */
+@property --time-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 360deg;
+}
+
 /* ── Time — circular countdown gauge (conic-gradient) ────────── */
 .time {
   width: 2.5rem;
@@ -5,11 +12,17 @@
   border-radius: var(--radius-full);
   background: conic-gradient(
     var(--time-fill, var(--background)) 0deg,
-    var(--time-fill, var(--background)) var(--time-angle, 270deg),
-    var(--time-bg,   var(--foreground)) var(--time-angle, 270deg)
+    var(--time-fill, var(--background)) var(--time-angle),
+    var(--time-bg,   var(--foreground)) var(--time-angle)
   );
   display: inline-flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  animation: time-countdown 30s linear forwards;
+}
+
+@keyframes time-countdown {
+  from { --time-angle: 360deg; }
+  to   { --time-angle: 0deg; }
 }

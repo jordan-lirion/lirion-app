@@ -90,7 +90,7 @@
             </div>
 
             <!-- Memoson (sélectionné par défaut) -->
-            <div class="card-training card-training--memoson" data-training="memoson">
+            <div class="card-training card-training--memoson" data-training="memoson" data-href="memoson-d.html">
               <div class="card-training__icon-area">
                 <div class="card-training__icon-circle">
                   <img src="assets/training/memoson.svg" class="card-training__icon" alt="">
@@ -229,6 +229,10 @@
     }
 
     function selectCard(card) {
+      if (card.classList.contains('card-training--active') && card.dataset.href) {
+        window.location.href = card.dataset.href;
+        return;
+      }
       const training = card.dataset.training;
       canvas.style.background = `var(--training-${training}-100)`;
       cards.forEach(c => c.classList.remove('card-training--active'));

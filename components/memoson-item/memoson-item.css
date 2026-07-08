@@ -41,8 +41,3 @@
   box-shadow: inset 0px -4px 4px oklch(0 0 0 / 0.16);
   color: oklch(1 0 0);
 }
-
-/* proposition-off + texte = drop shadow + inner shadow */
-.memoson-item--proposition-off.memoson-item--activated {
-  box-shadow: inset 0px -4px 4px oklch(0 0 0 / 0.16);
-}

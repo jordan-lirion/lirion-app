@@ -44,6 +44,5 @@
 
 /* proposition-off + texte = drop shadow + inner shadow */
 .memoson-item--proposition-off.memoson-item--activated {
-  box-shadow: 0 3px 6px oklch(0 0 0 / 0.1),
-              inset 0 2px 6px oklch(0 0 0 / 0.1);
+  box-shadow: inset 0px -4px 4px oklch(0 0 0 / 0.16);
 }

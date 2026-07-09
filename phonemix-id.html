@@ -282,13 +282,25 @@
     let originX   = 0;
     let lastDragX = 0;
 
-    function showFeedback(el) {
+    function showFeedback(el, onEnd) {
       el.classList.remove('phonemix-id__feedback--show');
-      void el.offsetWidth; // reflow pour relancer l'animation
+      void el.offsetWidth;
       el.classList.add('phonemix-id__feedback--show');
       el.addEventListener('animationend', () => {
         el.classList.remove('phonemix-id__feedback--show');
+        if (onEnd) onEnd();
       }, { once: true });
+    }
+
+    function dropBallFromTop() {
+      // Téléporter la balle hors écran en haut sans transition
+      ball.style.transition = 'none';
+      ball.style.transform  = 'translate(-50%, calc(-50vh - 150%)) rotate(0deg)';
+      void ball.offsetWidth; // reflow
+      // Rejouer la chute
+      ball.style.transition = `transform 1.8s ${spring}`;
+      ball.style.transform  = 'translate(-50%, -50%) rotate(720deg)';
+      setTimeout(() => { throwing = false; }, 1900);
     }
 
     // Supprime l'animation CSS et fixe la balle à sa position de repos
@@ -306,22 +318,13 @@
       const cageCenterX = rect.left + rect.width / 2;
       const targetDX = cageCenterX - window.innerWidth / 2;
 
-      // Ballon vole vers la cage et rétrécit
+      // Ballon vole vers la cage et rétrécit (reste légèrement visible)
       ball.style.transition = 'transform 0.45s ease-in';
-      ball.style.transform  = `translate(calc(-50% + ${targetDX}px), -50%) scale(0)`;
+      ball.style.transform  = `translate(calc(-50% + ${targetDX}px), -50%) scale(0.5)`;
 
       ball.addEventListener('transitionend', () => {
-        // Feedback but / oops
-        showFeedback(direction === 'right' ? fbBut : fbOops);
-
-        // Retour au centre avec spring
-        setTimeout(() => {
-          ball.style.transition = `transform 0.7s ${spring}`;
-          ball.style.transform  = 'translate(-50%, -50%)';
-        }, 350);
-
-        // Déverrouiller le drag une fois que l'animation de retour est terminée
-        setTimeout(() => { throwing = false; }, 1400);
+        // Feedback but / oops — quand il se termine, relancer le drop depuis le haut
+        showFeedback(direction === 'right' ? fbBut : fbOops, dropBallFromTop);
       }, { once: true });
     }
 

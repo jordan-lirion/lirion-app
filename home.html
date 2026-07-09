@@ -31,9 +31,14 @@
       padding-right: 0;
       justify-content: flex-start;
       scrollbar-width: none;
+      scroll-snap-type: x mandatory;
     }
     .home-body::-webkit-scrollbar {
       display: none;
+    }
+
+    .card-training {
+      scroll-snap-align: center;
     }
 
     /* Track: padding-left = (100vw - card_w) / 2 = (100 - 27) / 2 = 36.5vw
@@ -115,7 +120,7 @@
               </div>
             </div>
 
-            <!-- Phonemix -->
+            <!-- Phonemix Identification -->
             <div class="card-training card-training--phonemix" data-training="phonemix" data-href="phonemix-id.html">
               <div class="card-training__icon-area">
                 <div class="card-training__icon-circle">
@@ -124,7 +129,20 @@
                 <span class="badge">Niveau 1</span>
               </div>
               <div class="card-training__footer">
-                <span class="card-training__title">Phonemix</span>
+                <span class="card-training__title">Phonemix Identification</span>
+              </div>
+            </div>
+
+            <!-- Phonemix Discrimination -->
+            <div class="card-training card-training--phonemix" data-training="phonemix" data-href="phonemix-dis.html">
+              <div class="card-training__icon-area">
+                <div class="card-training__icon-circle">
+                  <img src="assets/training/phonemix.svg" class="card-training__icon" alt="">
+                </div>
+                <span class="badge">Niveau 1</span>
+              </div>
+              <div class="card-training__footer">
+                <span class="card-training__title">Phonemix Discrimination</span>
               </div>
             </div>
 
@@ -228,21 +246,46 @@
       scrollContainer.scrollTo({ left: target, behavior: smooth ? 'smooth' : 'instant' });
     }
 
-    function selectCard(card) {
-      if (card.classList.contains('card-training--active') && card.dataset.href) {
-        window.location.href = card.dataset.href;
-        return;
-      }
+    function activateCard(card) {
       const training = card.dataset.training;
       canvas.style.background = `var(--training-${training}-100)`;
       cards.forEach(c => c.classList.remove('card-training--active'));
       card.classList.add('card-training--active');
-      centerCard(card);
     }
 
-    cards.forEach(card => card.addEventListener('click', () => selectCard(card)));
+    function getCardAtCenter() {
+      const containerCenter = scrollContainer.getBoundingClientRect().left + scrollContainer.offsetWidth / 2;
+      let closest = null;
+      let minDist = Infinity;
+      cards.forEach(card => {
+        const rect = card.getBoundingClientRect();
+        const dist = Math.abs(rect.left + rect.width / 2 - containerCenter);
+        if (dist < minDist) { minDist = dist; closest = card; }
+      });
+      return closest;
+    }
 
-    // Center the initially active card without animation
+    // Le scroll sélectionne la card centrée
+    let scrollTimer = null;
+    scrollContainer.addEventListener('scroll', () => {
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(() => {
+        const card = getCardAtCenter();
+        if (card) activateCard(card);
+      }, 80);
+    });
+
+    // Le clic navigue directement si la card est active, sinon la centre
+    cards.forEach(card => card.addEventListener('click', () => {
+      if (card.classList.contains('card-training--active')) {
+        if (card.dataset.href) window.location.href = card.dataset.href;
+      } else {
+        activateCard(card);
+        centerCard(card);
+      }
+    }));
+
+    // Centre la card active initiale sans animation
     const initialCard = document.querySelector('.card-training--active');
     if (initialCard) centerCard(initialCard, false);
   </script>

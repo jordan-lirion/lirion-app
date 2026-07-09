@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <!-- === PWA / Web App iOS === -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Lirion">
+  <meta name="theme-color" content="#facc15">
+  <link rel="apple-touch-icon" href="assets/icons/icon-180.png">
+  <link rel="manifest" href="manifest.json">
+  <!-- === /PWA === -->
+  <title>Lirion — Phonemix · Discrimination</title>
+  <link rel="stylesheet" href="components/main.css">
+  <style>
+    .game-canvas {
+      background: var(--training-phonemix-200);
+    }
+
+    /* ── Title ─────────────────────────────────────────────────── */
+    .phonemix-dis__title {
+      font-size: var(--text-xl);
+      font-weight: var(--font-semibold);
+      color: oklch(1 0 0);
+    }
+
+    /* ── Pause button ──────────────────────────────────────────── */
+    .screen-header .btn--icon {
+      background: var(--training-phonemix-200);
+      border: solid 2px var(--training-phonemix-300);
+      color: oklch(1 0 0);
+    }
+    .screen-header .btn--icon:hover {
+      background: color-mix(in oklab, var(--training-phonemix-200) 85%, black);
+    }
+
+    /* ── Count ──────────────────────────────────────────────────── */
+    .count {
+      background: var(--training-phonemix-200);
+      border: solid 2px var(--training-phonemix-300);
+      color: oklch(1 0 0);
+    }
+
+    /* ── Time ───────────────────────────────────────────────────── */
+    .time {
+      --time-fill: var(--background);
+      --time-bg:   var(--training-phonemix-200);
+      border: solid 2px var(--training-phonemix-300);
+    }
+
+    /* ── Help ───────────────────────────────────────────────────── */
+    .help {
+      box-shadow:
+        0 3px 8px oklch(0 0 0 / 0.12),
+        inset 0 -1px 4px oklch(0 0 0 / 0.07);
+    }
+
+    /* ── Footer ancré en bas ───────────────────────────────────── */
+    .screen-layout {
+      justify-content: space-between;
+    }
+
+    /* ── Field decorations ─────────────────────────────────────── */
+    .phonemix-dis__cage-front {
+      position: absolute;
+      left: 0;
+      top: var(--screen-header-h);
+      width: 100%;
+      height: auto;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .phonemix-dis__lion {
+      position: absolute;
+      left: 50%;
+      bottom: calc(var(--screen-footer-h) + 4rem);
+      height: calc(100vh - var(--screen-header-h) - var(--screen-footer-h) - 5rem);
+      width: auto;
+      transform: translateX(-50%);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .phonemix-dis__ball {
+      position: absolute;
+      width: 5rem;
+      height: auto;
+      bottom: 1rem;
+      cursor: grab;
+      z-index: 3;
+      animation: 1.8s var(--easing-spring) both;
+    }
+
+    .phonemix-dis__ball--blue {
+      left: 30%;
+      transform: translateX(-50%);
+      animation-name: ball-rise-ccw;
+      animation-delay: 0.2s;
+    }
+
+    .phonemix-dis__ball--red {
+      left: 70%;
+      transform: translateX(-50%);
+      animation-name: ball-rise-cw;
+      animation-delay: 0.5s;
+    }
+
+    @keyframes ball-rise-ccw {
+      from { transform: translateX(-50%) translateY(150vh) rotate(0deg); }
+      to   { transform: translateX(-50%) translateY(0)     rotate(-720deg); }
+    }
+
+    @keyframes ball-rise-cw {
+      from { transform: translateX(-50%) translateY(150vh) rotate(0deg); }
+      to   { transform: translateX(-50%) translateY(0)     rotate(720deg); }
+    }
+
+    /* ── Feedback (but / oops) ─────────────────────────────────── */
+    .phonemix-dis__feedback {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 65vw;
+      height: auto;
+      pointer-events: none;
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0);
+      z-index: 10;
+    }
+
+    .phonemix-dis__feedback--show {
+      animation: feedback-pop 1.5s linear forwards;
+    }
+
+    @keyframes feedback-pop {
+      0%   { transform: translate(-50%, -50%) scale(0);    opacity: 1; }
+      18%  { transform: translate(-50%, -50%) scale(1.3);  opacity: 1; }
+      32%  { transform: translate(-50%, -50%) scale(0.88); opacity: 1; }
+      45%  { transform: translate(-50%, -50%) scale(1.1);  opacity: 1; }
+      56%  { transform: translate(-50%, -50%) scale(0.96); opacity: 1; }
+      65%  { transform: translate(-50%, -50%) scale(1);    opacity: 1; }
+      80%  { transform: translate(-50%, -50%) scale(1);    opacity: 1; }
+      100% { transform: translate(-50%, -50%) scale(0.6);  opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Dialog — pause -->
+  <div class="dialog-overlay" id="pause-overlay">
+    <button class="btn btn--icon btn--primary dialog__close" id="btn-pause-close" aria-label="Reprendre">
+      <i data-lucide="x" class="text-xl"></i>
+    </button>
+    <div class="dialog">
+      <div class="dialog__content">
+        <h2 class="dialog__title">Ton entraînement est en pause.</h2>
+      </div>
+      <div class="dialog__footer">
+        <button class="btn btn--default btn--lg btn--full" id="btn-pause-resume">
+          <i data-lucide="play"></i>
+          Reprendre
+        </button>
+        <button class="btn btn--outline btn--lg btn--full" id="btn-pause-quit">
+          Quitter
+        </button>
+        <p class="dialog__text text-center">Tu devras recommencer à zéro.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dialog — aide Phonemix Discrimination -->
+  <div class="dialog-overlay" id="help-overlay">
+    <button class="btn btn--icon btn--primary dialog__close" id="btn-dialog-close" aria-label="Fermer">
+      <i data-lucide="x" class="text-xl"></i>
+    </button>
+    <div class="dialog">
+      <div class="dialog__content">
+        <p class="dialog__text">Écoute les deux lignes de son.<br>Trouve celui qui est différent et tape dessus.</p>
+      </div>
+      <div class="dialog__footer">
+        <button class="btn btn--default btn--lg btn--full" id="btn-dialog-start">Démarrer</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="game-viewport">
+    <div class="game-canvas">
+      <div class="screen screen-layout">
+
+        <header class="screen-header">
+          <div class="bar-start">
+            <button class="btn btn--icon btn--primary" id="btn-pause" aria-label="Pause">
+              <i data-lucide="pause" fill="#fff" class="text-2xl"></i>
+            </button>
+            <span class="phonemix-dis__title">Phonemix - Discrimination</span>
+          </div>
+          <div class="bar-end">
+            <div class="count" id="score">3</div>
+            <div class="time"></div>
+          </div>
+        </header>
+
+        <main class="screen-body">
+          <img src="assets/illustration/phonemix/cage-front.svg"     class="phonemix-dis__cage-front" alt="">
+          <img src="assets/illustration/phonemix/goal/lion.png"      class="phonemix-dis__lion" alt="">
+          <img src="assets/illustration/phonemix/ball-blue.svg"      class="phonemix-dis__ball phonemix-dis__ball--blue" alt="">
+          <img src="assets/illustration/phonemix/ball-blue-red.svg"  class="phonemix-dis__ball phonemix-dis__ball--red"  alt="">
+          <img src="assets/illustration/phonemix/but.svg"            class="phonemix-dis__feedback" id="fb-but"  alt="">
+          <img src="assets/illustration/phonemix/oops.svg"           class="phonemix-dis__feedback" id="fb-oops" alt="">
+        </main>
+
+        <footer class="screen-footer">
+          <div class="bar-start">
+            <div class="help">
+              <img src="assets/illustration/think.png" class="help__img" alt="Aide">
+            </div>
+          </div>
+        </footer>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script type="module" src="components/main.js"></script>
+  <script>
+    lucide.createIcons();
+
+    // Dialog — aide
+    const helpOverlay  = document.getElementById('help-overlay');
+    const btnHelpClose = document.getElementById('btn-dialog-close');
+    const btnHelpStart = document.getElementById('btn-dialog-start');
+
+    function openHelp()  { helpOverlay.classList.add('dialog-overlay--open'); }
+    function closeHelp() { helpOverlay.classList.remove('dialog-overlay--open'); }
+
+    document.querySelector('.help').addEventListener('click', openHelp);
+    btnHelpClose.addEventListener('click', closeHelp);
+    btnHelpStart.addEventListener('click', closeHelp);
+    helpOverlay.addEventListener('click', e => { if (e.target === helpOverlay) closeHelp(); });
+
+    // Dialog — pause
+    const pauseOverlay  = document.getElementById('pause-overlay');
+    const btnPause      = document.getElementById('btn-pause');
+    const btnPauseClose = document.getElementById('btn-pause-close');
+    const btnResume     = document.getElementById('btn-pause-resume');
+    const btnQuit       = document.getElementById('btn-pause-quit');
+
+    function openPause()  { pauseOverlay.classList.add('dialog-overlay--open'); }
+    function closePause() { pauseOverlay.classList.remove('dialog-overlay--open'); }
+
+    btnPause.addEventListener('click', openPause);
+    btnPauseClose.addEventListener('click', closePause);
+    btnResume.addEventListener('click', closePause);
+    btnQuit.addEventListener('click', () => { window.location.href = 'home.html'; });
+    pauseOverlay.addEventListener('click', e => { if (e.target === pauseOverlay) closePause(); });
+
+    // ── Gameplay ───────────────────────────────────────────────────
+    const spring    = getComputedStyle(document.documentElement).getPropertyValue('--easing-spring').trim();
+    const ballBlue  = document.querySelector('.phonemix-dis__ball--blue');
+    const ballRed   = document.querySelector('.phonemix-dis__ball--red');
+    const cageFront = document.querySelector('.phonemix-dis__cage-front');
+    const lionImg   = document.querySelector('.phonemix-dis__lion');
+    const fbBut     = document.getElementById('fb-but');
+    const fbOops    = document.getElementById('fb-oops');
+
+    // Stoppe l'animation CSS initiale et fixe la balle à sa position de repos
+    function stopBallAnim(ball) {
+      ball.style.animation = 'none';
+      ball.style.transform = 'translateX(-50%) translateY(0)';
+    }
+    ballBlue.addEventListener('animationend', () => stopBallAnim(ballBlue));
+    ballRed.addEventListener('animationend',  () => stopBallAnim(ballRed));
+    setTimeout(() => { stopBallAnim(ballBlue); stopBallAnim(ballRed); }, 3000);
+
+    function showFeedback(el, onEnd) {
+      el.classList.remove('phonemix-dis__feedback--show');
+      void el.offsetWidth;
+      el.classList.add('phonemix-dis__feedback--show');
+      el.addEventListener('animationend', () => {
+        el.classList.remove('phonemix-dis__feedback--show');
+        if (onEnd) onEnd();
+      }, { once: true });
+    }
+
+    function resetBalls() {
+      [ballBlue, ballRed].forEach(b => {
+        b.style.transition = 'none';
+        b.style.transform  = 'translateX(-50%) translateY(150vh) rotate(0deg)';
+      });
+      void ballBlue.offsetWidth;
+      ballBlue.style.transition = `transform 1.8s ${spring}`;
+      ballBlue.style.transform  = 'translateX(-50%) translateY(0) rotate(-720deg)';
+      setTimeout(() => {
+        ballRed.style.transition = `transform 1.8s ${spring}`;
+        ballRed.style.transform  = 'translateX(-50%) translateY(0) rotate(720deg)';
+      }, 300);
+      setTimeout(() => {
+        [ballBlue, ballRed].forEach(b => {
+          b.style.transition = 'none';
+          b.style.transform  = 'translateX(-50%) translateY(0)';
+        });
+        throwing = false;
+      }, 2300);
+    }
+
+    let dragging     = false;
+    let throwing     = false;
+    let activeBall   = null;
+    let activeIsBlue = false;
+    let originX      = 0;
+    let originY      = 0;
+    let lastDragX    = 0;
+    let lastDragY    = 0;
+
+    const MAX_DRAG   = window.innerWidth  * 0.25;
+    const MAX_DRAG_Y = window.innerHeight * 0.25;
+    const THRESHOLD  = MAX_DRAG   * 0.4;
+    const THRESHOLD_Y = MAX_DRAG_Y * 0.3;
+
+    function throwBall(ball, correct) {
+      throwing = true;
+      const cageRect = cageFront.getBoundingClientRect();
+      const ballRect  = ball.getBoundingClientRect();
+      const dx = (cageRect.left + cageRect.width  / 2) - (ballRect.left + ballRect.width  / 2);
+      const dy = (cageRect.top  + cageRect.height / 2) - (ballRect.top  + ballRect.height / 2);
+
+      const targetScale = correct ? 0.5 : 0;
+      ball.style.transition = 'transform 0.45s ease-in';
+      ball.style.transform  = `translate(calc(-50% + ${lastDragX + dx}px), ${lastDragY + dy}px) scale(${targetScale})`;
+      lastDragX = 0;
+      lastDragY = 0;
+
+      ball.addEventListener('transitionend', () => {
+        lionImg.src = correct
+          ? 'assets/illustration/phonemix/goal/lion-2.png'
+          : 'assets/illustration/phonemix/goal/lion-1.png';
+        showFeedback(correct ? fbBut : fbOops, () => {
+          lionImg.src = 'assets/illustration/phonemix/goal/lion.png';
+          resetBalls();
+        });
+      }, { once: true });
+    }
+
+    function releaseBall() {
+      if (!dragging) return;
+      dragging = false;
+
+      // Blue doit aller vers la droite + haut, red vers la gauche + haut
+      const triggered = activeIsBlue
+        ? lastDragX > THRESHOLD  && lastDragY < -THRESHOLD_Y
+        : lastDragX < -THRESHOLD && lastDragY < -THRESHOLD_Y;
+
+      if (triggered) {
+        throwBall(activeBall, !activeIsBlue);
+        activeBall = null;
+      } else {
+        activeBall.style.transition = `transform 0.5s ${spring}`;
+        activeBall.style.transform  = 'translateX(-50%) translateY(0)';
+        activeBall = null;
+        lastDragX  = 0;
+        lastDragY  = 0;
+      }
+    }
+
+    [ballBlue, ballRed].forEach((ball, idx) => {
+      const isThisBlue = idx === 0;
+      ball.addEventListener('pointerdown', e => {
+        if (throwing) return;
+        stopBallAnim(ball);
+        dragging     = true;
+        activeBall   = ball;
+        activeIsBlue = isThisBlue;
+        originX      = e.clientX;
+        originY      = e.clientY;
+        lastDragX    = 0;
+        lastDragY    = 0;
+        ball.style.transition = 'none';
+        ball.setPointerCapture(e.pointerId);
+        e.preventDefault();
+      });
+    });
+
+    document.addEventListener('pointermove', e => {
+      if (!dragging || !activeBall) return;
+      lastDragX = e.clientX - originX;
+      lastDragY = e.clientY - originY;
+      activeBall.style.transform = `translate(calc(-50% + ${lastDragX}px), ${lastDragY}px)`;
+    });
+
+    document.addEventListener('pointerup',     releaseBall);
+    document.addEventListener('pointercancel', releaseBall);
+  </script>
+</body>
+</html>

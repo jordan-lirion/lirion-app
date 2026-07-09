@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <!-- === PWA / Web App iOS === -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Lirion">
+  <meta name="theme-color" content="#facc15">
+  <link rel="apple-touch-icon" href="assets/icons/icon-180.png">
+  <link rel="manifest" href="manifest.json">
+  <!-- === /PWA === -->
+  <title>Lirion — Memoson · Cache Cache</title>
+  <link rel="stylesheet" href="components/main.css">
+  <style>
+    .game-canvas {
+      background: var(--training-memoson-200);
+    }
+
+    /* ── Title ─────────────────────────────────────────────────── */
+    .memoson-c__title {
+      font-size: var(--text-xl);
+      font-weight: var(--font-semibold);
+      color: oklch(1 0 0);
+    }
+
+    /* ── Pause button ──────────────────────────────────────────── */
+    .screen-header .btn--icon {
+      background: var(--training-memoson-200);
+      border: solid 2px var(--training-memoson-300);
+      color: oklch(1 0 0);
+    }
+    .screen-header .btn--icon:hover {
+      background: color-mix(in oklab, var(--training-memoson-200) 85%, black);
+    }
+
+    /* ── Count ──────────────────────────────────────────────────── */
+    .count {
+      background: var(--training-memoson-200);
+      border: solid 2px var(--training-memoson-300);
+      color: oklch(1 0 0);
+    }
+
+    /* ── Time ───────────────────────────────────────────────────── */
+    .time {
+      --time-fill: var(--background);
+      --time-bg:   var(--training-memoson-200);
+      border: solid 2px var(--training-memoson-300);
+    }
+
+    /* ── Help ──────────────────────────────────────────────────── */
+    .help {
+      box-shadow:
+        0 3px 8px oklch(0 0 0 / 0.12),
+        inset 0 -1px 4px oklch(0 0 0 / 0.07);
+    }
+
+    /* ── Play button ─────────────────────────────────────────────── */
+    .screen-footer .btn--icon {
+      width: 3.5rem;
+      height: 3.5rem;
+      color: var(--training-memoson-300);
+      box-shadow:
+        0 3px 8px oklch(0 0 0 / 0.12),
+        inset 0 -1px 4px oklch(0 0 0 / 0.07);
+    }
+    .screen-footer .btn--icon:hover {
+      background: color-mix(in oklab, var(--background) 85%, black);
+    }
+
+    /* ── Play button — état actif ────────────────────────────────── */
+    .screen-footer .btn-play--active {
+      background: var(--training-memoson-300);
+      color: oklch(1 0 0);
+    }
+    .screen-footer .btn-play--active:hover {
+      background: color-mix(in oklab, var(--training-memoson-300) 85%, black);
+    }
+
+    /* ── Audio wave icon ─────────────────────────────────────────── */
+    .audio-bars {
+      width: 1em;
+      height: 1em;
+      display: none;
+      flex-shrink: 0;
+    }
+
+    .btn-play--active [data-lucide] { display: none; }
+    .btn-play--active .audio-bars   { display: block; }
+
+    .audio-bars .bar {
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+
+    .btn-play--active .audio-bars .bar:nth-child(1) { animation: audio-bar 0.55s 0.00s ease-in-out infinite alternate; }
+    .btn-play--active .audio-bars .bar:nth-child(2) { animation: audio-bar 0.70s 0.18s ease-in-out infinite alternate; }
+    .btn-play--active .audio-bars .bar:nth-child(3) { animation: audio-bar 0.60s 0.08s ease-in-out infinite alternate; }
+    .btn-play--active .audio-bars .bar:nth-child(4) { animation: audio-bar 0.80s 0.28s ease-in-out infinite alternate; }
+
+    @keyframes audio-bar {
+      from { transform: scaleY(0.15); }
+      to   { transform: scaleY(1); }
+    }
+
+    /* ── Screen body — override pour la grille ─────────────────── */
+    .screen-body {
+      padding-top:    var(--screen-header-h);
+      padding-bottom: var(--screen-footer-h);
+      padding-left:   var(--space-5);
+      padding-right:  var(--space-5);
+      overflow: hidden;
+    }
+
+    /* ── Footer ancré en bas ───────────────────────────────────── */
+    .screen-layout {
+      justify-content: space-between;
+    }
+
+    .memoson-c__grid {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      justify-content: center;
+    }
+
+    .memoson-c__row {
+      display: flex;
+      gap: var(--space-3);
+      align-items: center;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+  <!-- Dialog — pause -->
+  <div class="dialog-overlay" id="pause-overlay">
+    <button class="btn btn--icon btn--primary dialog__close" id="btn-pause-close" aria-label="Reprendre">
+      <i data-lucide="x" class="text-xl"></i>
+    </button>
+    <div class="dialog">
+      <div class="dialog__content">
+        <h2 class="dialog__title">Ton entraînement est en pause.</h2>
+      </div>
+      <div class="dialog__footer">
+        <button class="btn btn--default btn--lg btn--full" id="btn-pause-resume">
+          <i data-lucide="play"></i>
+          Reprendre
+        </button>
+        <button class="btn btn--outline btn--lg btn--full" id="btn-pause-quit">
+          Quitter
+        </button>
+        <p class="dialog__text text-center">Tu devras recommencer à zéro.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dialog — aide Memoson Cache Cache -->
+  <div class="dialog-overlay" id="help-overlay">
+    <button class="btn btn--icon btn--primary dialog__close" id="btn-dialog-close" aria-label="Fermer">
+      <i data-lucide="x" class="text-xl"></i>
+    </button>
+    <div class="dialog">
+      <div class="dialog__content">
+        <p class="dialog__text">Écoute le son joué.<br>Retrouve-le parmi les propositions et tape dessus.</p>
+      </div>
+      <div class="dialog__footer">
+        <button class="btn btn--default btn--lg btn--full" id="btn-dialog-start">Démarrer</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="game-viewport">
+    <div class="game-canvas">
+      <div class="screen screen-layout">
+
+        <header class="screen-header">
+          <div class="bar-start">
+            <button class="btn btn--icon btn--primary" id="btn-pause" aria-label="Pause">
+              <i data-lucide="pause" fill="#fff" class="text-2xl"></i>
+            </button>
+            <span class="memoson-c__title">Memoson - Cache Cache</span>
+          </div>
+          <div class="bar-end">
+            <div class="count" id="score">3</div>
+            <div class="time"></div>
+          </div>
+        </header>
+
+        <main class="screen-body">
+          <div class="memoson-c__grid">
+
+            <!-- Ligne 1 — Propositions (6 items) -->
+            <div class="memoson-c__row">
+              <div class="memoson-item memoson-item--proposition-off"></div>
+              <div class="memoson-item memoson-item--proposition-off"></div>
+              <div class="memoson-item memoson-item--proposition-off"></div>
+              <div class="memoson-item memoson-item--proposition-off"></div>
+              <div class="memoson-item memoson-item--proposition-off"></div>
+              <div class="memoson-item memoson-item--proposition-off"></div>
+            </div>
+
+            <!-- Ligne 2 — Instruction (1 item) -->
+            <div class="memoson-c__row">
+              <div class="memoson-item memoson-item--instruction-off"></div>
+            </div>
+
+          </div>
+        </main>
+
+        <footer class="screen-footer">
+          <div class="bar-start">
+            <div class="help">
+              <img src="assets/illustration/think.png" class="help__img" alt="Aide">
+            </div>
+          </div>
+          <div class="bar-end">
+            <button class="btn btn--icon btn--primary btn-play" aria-label="Jouer">
+              <i data-lucide="play" fill="oklch(0.722 0.148 166.762)" class="text-2xl"></i>
+              <svg class="audio-bars text-xl" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <rect class="bar" x="2"    y="0" width="2.5" height="24" rx="1.25"/>
+                <rect class="bar" x="7.5"  y="0" width="2.5" height="24" rx="1.25"/>
+                <rect class="bar" x="13"   y="0" width="2.5" height="24" rx="1.25"/>
+                <rect class="bar" x="18.5" y="0" width="2.5" height="24" rx="1.25"/>
+              </svg>
+            </button>
+          </div>
+        </footer>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script type="module" src="components/main.js"></script>
+  <script>
+    lucide.createIcons();
+
+    // ── Dialogs ────────────────────────────────────────────────────
+    const helpOverlay  = document.getElementById('help-overlay');
+    const btnHelpClose = document.getElementById('btn-dialog-close');
+    const btnHelpStart = document.getElementById('btn-dialog-start');
+
+    function openHelp()  { helpOverlay.classList.add('dialog-overlay--open'); }
+    function closeHelp() { helpOverlay.classList.remove('dialog-overlay--open'); }
+
+    document.querySelector('.help').addEventListener('click', openHelp);
+    btnHelpClose.addEventListener('click', closeHelp);
+    btnHelpStart.addEventListener('click', closeHelp);
+    helpOverlay.addEventListener('click', e => { if (e.target === helpOverlay) closeHelp(); });
+
+    const pauseOverlay  = document.getElementById('pause-overlay');
+    const btnPause      = document.getElementById('btn-pause');
+    const btnPauseClose = document.getElementById('btn-pause-close');
+    const btnResume     = document.getElementById('btn-pause-resume');
+    const btnQuit       = document.getElementById('btn-pause-quit');
+
+    function openPause()  { pauseOverlay.classList.add('dialog-overlay--open'); }
+    function closePause() { pauseOverlay.classList.remove('dialog-overlay--open'); }
+
+    btnPause.addEventListener('click', openPause);
+    btnPauseClose.addEventListener('click', closePause);
+    btnResume.addEventListener('click', closePause);
+    btnQuit.addEventListener('click', () => { window.location.href = 'home.html'; });
+    pauseOverlay.addEventListener('click', e => { if (e.target === pauseOverlay) closePause(); });
+
+    // ── Game ───────────────────────────────────────────────────────
+    const ON_MS  = 500;
+    const GAP_MS = 500;
+
+    const rows       = document.querySelectorAll('.memoson-c__row');
+    const propItems  = Array.from(rows[0].querySelectorAll('.memoson-item'));
+    const instrItems = Array.from(rows[1].querySelectorAll('.memoson-item'));
+    const btnPlay    = document.querySelector('.btn-play');
+
+    let playing = false;
+
+    function setItemState(el, stateClass) {
+      el.className = `memoson-item ${stateClass}`;
+      switch (stateClass) {
+        case 'memoson-item--proposition-pending':
+          el.innerHTML = '<span class="memoson-item__text">?</span>';
+          break;
+        case 'memoson-item--proposition-success':
+          el.innerHTML = '<span class="memoson-item__text">FA</span><div class="badge-icon badge-icon--success"><i data-lucide="check" class="text-2xl"></i></div>';
+          lucide.createIcons();
+          break;
+        case 'memoson-item--proposition-error':
+          el.innerHTML = '<span class="memoson-item__text">DE</span><div class="badge-icon badge-icon--error"><i data-lucide="x" class="text-2xl"></i></div>';
+          lucide.createIcons();
+          break;
+        default:
+          el.innerHTML = '';
+      }
+    }
+
+    function wait(ms) {
+      return new Promise(r => setTimeout(r, ms));
+    }
+
+    async function playRow(items, offClass, onClass) {
+      for (let i = 0; i < items.length; i++) {
+        setItemState(items[i], onClass);
+        await wait(ON_MS);
+        setItemState(items[i], offClass);
+        if (i < items.length - 1) await wait(GAP_MS);
+      }
+    }
+
+    async function startGame() {
+      if (playing) return;
+      playing = true;
+      btnPlay.classList.add('btn-play--active');
+
+      instrItems.forEach(el => setItemState(el, 'memoson-item--instruction-off'));
+      propItems.forEach(el  => setItemState(el, 'memoson-item--proposition-off'));
+
+      await playRow(propItems, 'memoson-item--proposition-off', 'memoson-item--proposition-on');
+      await wait(GAP_MS);
+      await playRow(instrItems, 'memoson-item--instruction-off', 'memoson-item--instruction-on');
+
+      propItems.forEach(el => setItemState(el, 'memoson-item--proposition-pending'));
+      btnPlay.classList.remove('btn-play--active');
+      playing = false;
+    }
+
+    propItems.forEach((item, idx) => {
+      item.addEventListener('click', async () => {
+        if (!item.classList.contains('memoson-item--proposition-pending')) return;
+        if (playing) return;
+        setItemState(item, idx === 0
+          ? 'memoson-item--proposition-success'
+          : 'memoson-item--proposition-error'
+        );
+        await wait(1500);
+        await startGame();
+      });
+    });
+
+    btnPlay.addEventListener('click', () => startGame());
+  </script>
+</body>
+</html>

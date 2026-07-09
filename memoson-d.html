@@ -196,42 +196,22 @@
 
             <!-- Ligne 1 — Instructions -->
             <div class="memoson-d__row">
-              <div class="memoson-item memoson-item--instruction-on"></div>
               <div class="memoson-item memoson-item--instruction-off"></div>
-              <div class="memoson-item memoson-item--instruction-on">
-                <span class="memoson-item__text">FA</span>
-              </div>
-              <div class="memoson-item memoson-item--instruction-off">
-                <span class="memoson-item__text">SI</span>
-              </div>
-              <div class="memoson-item memoson-item--instruction-on">
-                <span class="memoson-item__text">MI</span>
-              </div>
+              <div class="memoson-item memoson-item--instruction-off"></div>
+              <div class="memoson-item memoson-item--instruction-off"></div>
+              <div class="memoson-item memoson-item--instruction-off"></div>
+              <div class="memoson-item memoson-item--instruction-off"></div>
               <div class="memoson-item memoson-item--instruction-off"></div>
             </div>
 
             <!-- Ligne 2 — Propositions -->
             <div class="memoson-d__row">
-              <div class="memoson-item memoson-item--proposition-pending">
-                <span class="memoson-item__text">?</span>
-              </div>
-              <div class="memoson-item memoson-item--proposition-pending">
-                <span class="memoson-item__text">?</span>
-              </div>
-              <div class="memoson-item memoson-item--proposition-on"></div>
               <div class="memoson-item memoson-item--proposition-off"></div>
-              <div class="memoson-item memoson-item--proposition-success">
-                <span class="memoson-item__text">FA</span>
-                <div class="badge-icon badge-icon--success">
-                  <i data-lucide="check" class="text-2xl"></i>
-                </div>
-              </div>
-              <div class="memoson-item memoson-item--proposition-error">
-                <span class="memoson-item__text">SI</span>
-                <div class="badge-icon badge-icon--error">
-                  <i data-lucide="x" class="text-2xl"></i>
-                </div>
-              </div>
+              <div class="memoson-item memoson-item--proposition-off"></div>
+              <div class="memoson-item memoson-item--proposition-off"></div>
+              <div class="memoson-item memoson-item--proposition-off"></div>
+              <div class="memoson-item memoson-item--proposition-off"></div>
+              <div class="memoson-item memoson-item--proposition-off"></div>
             </div>
 
           </div>
@@ -265,12 +245,8 @@
   <script>
     lucide.createIcons();
 
-    document.querySelector('.btn-play').addEventListener('click', function () {
-      this.classList.toggle('btn-play--active');
-    });
-
-    // Dialog — aide
-    const helpOverlay = document.getElementById('help-overlay');
+    // ── Dialogs ────────────────────────────────────────────────────
+    const helpOverlay  = document.getElementById('help-overlay');
     const btnHelpClose = document.getElementById('btn-dialog-close');
     const btnHelpStart = document.getElementById('btn-dialog-start');
 
@@ -282,7 +258,6 @@
     btnHelpStart.addEventListener('click', closeHelp);
     helpOverlay.addEventListener('click', e => { if (e.target === helpOverlay) closeHelp(); });
 
-    // Dialog — pause
     const pauseOverlay  = document.getElementById('pause-overlay');
     const btnPause      = document.getElementById('btn-pause');
     const btnPauseClose = document.getElementById('btn-pause-close');
@@ -297,6 +272,81 @@
     btnResume.addEventListener('click', closePause);
     btnQuit.addEventListener('click', () => { window.location.href = 'home.html'; });
     pauseOverlay.addEventListener('click', e => { if (e.target === pauseOverlay) closePause(); });
+
+    // ── Game ───────────────────────────────────────────────────────
+    const ON_MS  = 500;
+    const GAP_MS = 500;
+
+    const rows       = document.querySelectorAll('.memoson-d__row');
+    const instrItems = Array.from(rows[0].querySelectorAll('.memoson-item'));
+    const propItems  = Array.from(rows[1].querySelectorAll('.memoson-item'));
+    const btnPlay    = document.querySelector('.btn-play');
+
+    let playing = false;
+
+    function setItemState(el, stateClass) {
+      el.className = `memoson-item ${stateClass}`;
+      switch (stateClass) {
+        case 'memoson-item--proposition-pending':
+          el.innerHTML = '<span class="memoson-item__text">?</span>';
+          break;
+        case 'memoson-item--proposition-success':
+          el.innerHTML = '<span class="memoson-item__text">FA</span><div class="badge-icon badge-icon--success"><i data-lucide="check" class="text-2xl"></i></div>';
+          lucide.createIcons();
+          break;
+        case 'memoson-item--proposition-error':
+          el.innerHTML = '<span class="memoson-item__text">DE</span><div class="badge-icon badge-icon--error"><i data-lucide="x" class="text-2xl"></i></div>';
+          lucide.createIcons();
+          break;
+        default:
+          el.innerHTML = '';
+      }
+    }
+
+    function wait(ms) {
+      return new Promise(r => setTimeout(r, ms));
+    }
+
+    async function playRow(items, offClass, onClass) {
+      for (let i = 0; i < items.length; i++) {
+        setItemState(items[i], onClass);
+        await wait(ON_MS);
+        setItemState(items[i], offClass);
+        if (i < items.length - 1) await wait(GAP_MS);
+      }
+    }
+
+    async function startGame() {
+      if (playing) return;
+      playing = true;
+      btnPlay.classList.add('btn-play--active');
+
+      instrItems.forEach(el => setItemState(el, 'memoson-item--instruction-off'));
+      propItems.forEach(el  => setItemState(el, 'memoson-item--proposition-off'));
+
+      await playRow(instrItems, 'memoson-item--instruction-off', 'memoson-item--instruction-on');
+      await wait(GAP_MS);
+      await playRow(propItems, 'memoson-item--proposition-off', 'memoson-item--proposition-on');
+
+      propItems.forEach(el => setItemState(el, 'memoson-item--proposition-pending'));
+      btnPlay.classList.remove('btn-play--active');
+      playing = false;
+    }
+
+    propItems.forEach((item, idx) => {
+      item.addEventListener('click', async () => {
+        if (!item.classList.contains('memoson-item--proposition-pending')) return;
+        if (playing) return;
+        setItemState(item, idx === 0
+          ? 'memoson-item--proposition-success'
+          : 'memoson-item--proposition-error'
+        );
+        await wait(1500);
+        await startGame();
+      });
+    });
+
+    btnPlay.addEventListener('click', () => startGame());
   </script>
 </body>
 </html>

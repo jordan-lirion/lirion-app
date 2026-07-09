@@ -408,7 +408,7 @@ html, body {
   justify-content: space-between;
   height: var(--screen-footer-h);
   flex-shrink: 0;
-  padding: var(--space-4);
+  padding: var(--space-6);
   position: relative;
   z-index: 1;
 }

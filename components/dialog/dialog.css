@@ -39,8 +39,8 @@
 
 .dialog__close {
   position: absolute;
-  top: var(--space-4);
-  right: var(--space-4);
+  top: var(--space-6);
+  right: var(--space-6);
 }
 
 .dialog__content {

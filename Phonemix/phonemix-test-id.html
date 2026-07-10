@@ -155,19 +155,26 @@
     <button class="btn btn--icon btn--primary dialog__close" id="btn-pause-close" aria-label="Reprendre">
       <i data-lucide="x" class="text-xl"></i>
     </button>
-    <div class="dialog">
-      <div class="dialog__content">
-        <h2 class="dialog__title">Ton entraînement est en pause.</h2>
+    <div class="dialog-wrapper">
+      <div class="dialog-lion">
+        <img src="../assets/illustration/thinking.png" class="dialog-lion__img" alt="">
       </div>
-      <div class="dialog__footer">
-        <button class="btn btn--default btn--lg btn--full" id="btn-pause-resume">
-          <i data-lucide="play"></i>
-          Reprendre
-        </button>
-        <button class="btn btn--outline btn--lg btn--full" id="btn-pause-quit">
-          Quitter
-        </button>
-        <p class="dialog__text text-center">Tu devras recommencer à zéro.</p>
+      <div class="dialog-pane">
+        <div class="dialog">
+          <div class="dialog__content">
+            <h2 class="dialog__title">Ton entraînement est en pause.</h2>
+          </div>
+          <div class="dialog__footer">
+            <button class="btn btn--default btn--lg btn--full" id="btn-pause-resume">
+              <i data-lucide="play"></i>
+              Reprendre
+            </button>
+            <button class="btn btn--outline btn--lg btn--full" id="btn-pause-quit">
+              Quitter
+            </button>
+            <p class="dialog__text text-center">Tu devras recommencer à zéro.</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -177,12 +184,19 @@
     <button class="btn btn--icon btn--primary dialog__close" id="btn-dialog-close" aria-label="Fermer">
       <i data-lucide="x" class="text-xl"></i>
     </button>
-    <div class="dialog">
-      <div class="dialog__content">
-        <p class="dialog__text">Écoute les deux lignes de son.<br>Trouve celui qui est différent et tape dessus.</p>
+    <div class="dialog-wrapper">
+      <div class="dialog-lion">
+        <img src="../assets/illustration/advice.png" class="dialog-lion__img" alt="">
       </div>
-      <div class="dialog__footer">
-        <button class="btn btn--default btn--lg btn--full" id="btn-dialog-start">Démarrer</button>
+      <div class="dialog-pane">
+        <div class="dialog">
+          <div class="dialog__content">
+            <p class="dialog__text">Écoute les deux lignes de son.<br>Trouve celui qui est différent et tape dessus.</p>
+          </div>
+          <div class="dialog__footer">
+            <button class="btn btn--default btn--lg btn--full" id="btn-dialog-start">Démarrer</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>

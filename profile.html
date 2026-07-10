@@ -28,6 +28,27 @@
       align-items: center;
       text-align: center;
     }
+
+    /* ── Panes ─────────────────────────────────────────────────── */
+    .profile__pane--lion {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .profile__pane--form {
+      flex: 2;
+    }
+
+    /* ── Lion ──────────────────────────────────────────────────── */
+    .profile__lion {
+      position: absolute;
+      bottom: -15%;
+      left: 50%;
+      transform: translateX(-50%);
+      height: 95%;
+      width: auto;
+    }
   </style>
 </head>
 <body>
@@ -48,8 +69,13 @@
           </div>
         </header>
 
-        <main class="screen-body">
+        <main class="screen-body screen-body--split">
 
+          <div class="screen-pane profile__pane--lion">
+            <img src="assets/illustration/hello.png" class="profile__lion" alt="Lirion">
+          </div>
+
+          <div class="screen-pane profile__pane--form">
           <div class="card profile__card">
 
             <div class="card__content">
@@ -66,6 +92,7 @@
               </button>
             </div>
 
+          </div>
           </div>
 
         </main>

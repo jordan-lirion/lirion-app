@@ -70,3 +70,38 @@
   align-items: center;
   gap: var(--space-3);
 }
+
+/* ── Dialog avec lion — layout full-screen split ─────────────── */
+.dialog-overlay:has(.dialog-wrapper) {
+  align-items: stretch;
+  justify-content: flex-start;
+}
+
+.dialog-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.dialog-lion {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.dialog-lion__img {
+  position: absolute;
+  bottom: -15%;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 95%;
+  width: auto;
+}
+
+.dialog-pane {
+  flex: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

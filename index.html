@@ -23,6 +23,26 @@
       width: 100%;
       max-width: 24rem;
     }
+
+    /* ── Panes ─────────────────────────────────────────────────── */
+    .login__pane--lion {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login__pane--form {
+      flex: 2;
+    }
+
+    .login__lion {
+      position: absolute;
+      bottom: -15%;
+      left: 50%;
+      transform: translateX(-50%);
+      height: 95%;
+      width: auto;
+    }
   </style>
 </head>
 <body>
@@ -30,36 +50,46 @@
     <div class="game-canvas">
       <div class="screen screen-layout" id="screen-login">
 
-        <main class="screen-body">
+        <main class="screen-body screen-body--split">
 
-          <div class="card login__card">
+          <div class="screen-pane login__pane--lion">
+            <img src="assets/illustration/neutral.png" class="login__lion" alt="Lirion">
+          </div>
 
-            <div class="card__content">
-              <div class="field">
-                <div class="input-group input-group--icon-start">
-                  <input
-                    class="input"
-                    type="email"
-                    id="login-email"
-                    placeholder="Mon email"
-                    autocomplete="email"
-                    inputmode="email"
-                    aria-describedby="email-hint"
-                  >
-                  <span class="input-group__icon" aria-hidden="true">
-                    <i data-lucide="mail" class="text-xl"></i>
-                  </span>
-                </div>
-                <p class="hint hint--error text-center" id="email-hint" hidden></p>
+          <div class="screen-pane login__pane--form">
+            <div class="card login__card">
+
+              <div class="card__header">
+                <h1 class="card__title text-center">Bienvenue sur Lirion!</h1>
               </div>
-            </div>
 
-            <div class="card__footer">
-              <button class="btn btn--default btn--lg btn--full" id="btn-continue">
-                Continuer
-              </button>
-            </div>
+              <div class="card__content">
+                <div class="field">
+                  <div class="input-group input-group--icon-start">
+                    <input
+                      class="input"
+                      type="email"
+                      id="login-email"
+                      placeholder="Mon email"
+                      autocomplete="email"
+                      inputmode="email"
+                      aria-describedby="email-hint"
+                    >
+                    <span class="input-group__icon" aria-hidden="true">
+                      <i data-lucide="mail" class="text-xl"></i>
+                    </span>
+                  </div>
+                  <p class="hint hint--error text-center" id="email-hint" hidden></p>
+                </div>
+              </div>
 
+              <div class="card__footer">
+                <button class="btn btn--default btn--lg btn--full" id="btn-continue">
+                  Continuer
+                </button>
+              </div>
+
+            </div>
           </div>
 
         </main>

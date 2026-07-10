@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <!-- === PWA / Web App iOS === -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Lirion">
+  <meta name="theme-color" content="#facc15">
+  <link rel="apple-touch-icon" href="../assets/icons/icon-180.png">
+  <link rel="manifest" href="../manifest.json">
+  <!-- === /PWA === -->
+  <title>Lirion — Memoson · Bravo !</title>
+  <link rel="stylesheet" href="../components/main.css">
+  <style>
+    .game-canvas {
+      background: var(--training-memoson-200);
+    }
+
+    /* ── Background rotatif ────────────────────────────────────── */
+    .congrats-bg {
+      position: absolute;
+      inset: -50%;
+      background: url('../assets/illustration/congrats.png') center / cover no-repeat;
+      animation: congrats-spin 60s linear infinite;
+    }
+
+    @keyframes congrats-spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    /* ── Pause button ──────────────────────────────────────────── */
+    .screen-header .btn--icon {
+      background: var(--training-memoson-200);
+      border: solid 2px var(--training-memoson-300);
+      color: oklch(1 0 0);
+    }
+    .screen-header .btn--icon:hover {
+      background: color-mix(in oklab, var(--training-memoson-200) 85%, black);
+    }
+
+    /* ── Bravo illustration ────────────────────────────────────── */
+    .congrats-bravo {
+      height: 6rem;
+      width: auto;
+    }
+
+    /* ── Screen body — colonne centrée ─────────────────────────── */
+    .screen-body {
+      flex-direction: column;
+      gap: var(--space-4);
+      padding-bottom: calc(var(--height-xl) + var(--space-2) * 2);
+    }
+
+    /* ── Item — badge succès ───────────────────────────────────── */
+    .congrats-item {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-3);
+      height: 3.25rem;
+      padding: 0 var(--space-8);
+      background: var(--success);
+      border: 2px solid oklch(1 0 0);
+      border-radius: var(--radius-full);
+      color: oklch(1 0 0);
+      font-size: var(--text-xl);
+      font-weight: var(--font-semibold);
+      white-space: nowrap;
+    }
+
+    /* ── Progress — jauge de niveau ────────────────────────────── */
+    .congrats-progress {
+      position: relative;
+      width: 17rem;
+      height: 3.25rem;
+      background: var(--training-memoson-300);
+      border: 2px solid oklch(1 0 0);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+    }
+
+    .congrats-progress__fill {
+      position: absolute;
+      inset-block: 0;
+      left: 0;
+      width: 0%;
+      background: var(--training-memoson-200);
+      transition: width 100ms linear;
+    }
+
+    .congrats-progress__label {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: oklch(1 0 0);
+      font-size: var(--text-xl);
+      font-weight: var(--font-semibold);
+    }
+
+    /* ── Bouton suivant — ancré en bas ────────────────────────── */
+    #btn-next {
+      position: absolute;
+      bottom: var(--space-6);
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  </style>
+</head>
+<body>
+  <!-- Dialog — pause -->
+  <div class="dialog-overlay" id="pause-overlay">
+    <button class="btn btn--icon btn--primary dialog__close" id="btn-pause-close" aria-label="Reprendre">
+      <i data-lucide="x" class="text-xl"></i>
+    </button>
+    <div class="dialog">
+      <div class="dialog__content">
+        <h2 class="dialog__title">Ton entraînement est en pause.</h2>
+      </div>
+      <div class="dialog__footer">
+        <button class="btn btn--default btn--lg btn--full" id="btn-pause-resume">
+          <i data-lucide="play"></i>
+          Reprendre
+        </button>
+        <button class="btn btn--outline btn--lg btn--full" id="btn-pause-quit">
+          Quitter
+        </button>
+        <p class="dialog__text text-center">Tu devras recommencer à zéro.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="game-viewport">
+    <div class="game-canvas">
+      <div class="congrats-bg"></div>
+      <div class="screen screen-layout">
+
+        <header class="screen-header">
+          <div class="bar-start">
+            <button class="btn btn--icon btn--primary" id="btn-pause" aria-label="Quitter">
+              <i data-lucide="x" class="text-2xl"></i>
+            </button>
+          </div>
+          <div class="bar-end" style="width: var(--height-md);" aria-hidden="true"></div>
+        </header>
+
+        <main class="screen-body">
+          <img src="../assets/illustration/bravo.png" class="congrats-bravo" alt="Bravo !">
+          <div class="congrats-item">
+            <i data-lucide="check" class="text-xl"></i>
+            3 bonnes réponses
+          </div>
+          <div class="congrats-progress">
+            <div class="congrats-progress__fill" id="progress-fill"></div>
+            <span class="congrats-progress__label" id="level-label">Niveau 1</span>
+          </div>
+        </main>
+
+        <button class="btn btn--primary btn--lg" id="btn-next">
+          Entrainement suivant
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script type="module" src="../components/main.js"></script>
+  <script>
+    lucide.createIcons();
+
+    // ── Pause overlay ──────────────────────────────────────────────
+    const pauseOverlay  = document.getElementById('pause-overlay');
+    const btnPause      = document.getElementById('btn-pause');
+    const btnPauseClose = document.getElementById('btn-pause-close');
+    const btnResume     = document.getElementById('btn-pause-resume');
+    const btnQuit       = document.getElementById('btn-pause-quit');
+
+    function openPause()  { pauseOverlay.classList.add('dialog-overlay--open'); }
+    function closePause() { pauseOverlay.classList.remove('dialog-overlay--open'); }
+
+    btnPause.addEventListener('click', openPause);
+    btnPauseClose.addEventListener('click', closePause);
+    btnResume.addEventListener('click', closePause);
+    btnQuit.addEventListener('click', () => { window.location.href = '../home.html'; });
+    pauseOverlay.addEventListener('click', e => { if (e.target === pauseOverlay) closePause(); });
+
+    // ── Level progress ─────────────────────────────────────────────
+    const fill       = document.getElementById('progress-fill');
+    const levelLabel = document.getElementById('level-label');
+
+    let level = 1;
+    let pct   = 0;
+
+    setInterval(() => {
+      pct += 1;
+      if (pct > 100) {
+        pct = 0;
+        level++;
+        levelLabel.textContent = `Niveau ${level}`;
+      }
+      fill.style.width = pct + '%';
+    }, 50);
+
+    // ── Navigation ─────────────────────────────────────────────────
+    document.getElementById('btn-next').addEventListener('click', () => {
+      window.location.href = '../home.html';
+    });
+  </script>
+</body>
+</html>

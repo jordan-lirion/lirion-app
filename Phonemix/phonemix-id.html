@@ -9,18 +9,18 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Lirion">
   <meta name="theme-color" content="#facc15">
-  <link rel="apple-touch-icon" href="assets/icons/icon-180.png">
-  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="../assets/icons/icon-180.png">
+  <link rel="manifest" href="../manifest.json">
   <!-- === /PWA === -->
-  <title>Lirion — Phonemix · Discrimination</title>
-  <link rel="stylesheet" href="components/main.css">
+  <title>Lirion — Phonemix · Identification</title>
+  <link rel="stylesheet" href="../components/main.css">
   <style>
     .game-canvas {
       background: var(--training-phonemix-200);
     }
 
     /* ── Title ─────────────────────────────────────────────────── */
-    .phonemix-dis__title {
+    .phonemix-id__title {
       font-size: var(--text-xl);
       font-weight: var(--font-semibold);
       color: oklch(1 0 0);
@@ -50,7 +50,7 @@
       border: solid 2px var(--training-phonemix-300);
     }
 
-    /* ── Help ───────────────────────────────────────────────────── */
+    /* ── Help — image zoomée + ombres ──────────────────────────── */
     .help {
       box-shadow:
         0 3px 8px oklch(0 0 0 / 0.12),
@@ -63,63 +63,50 @@
     }
 
     /* ── Field decorations ─────────────────────────────────────── */
-    .phonemix-dis__cage-front {
-      position: absolute;
-      left: 0;
-      top: var(--screen-header-h);
-      width: 100%;
-      height: auto;
-      pointer-events: none;
-      z-index: 1;
+    :root {
+      --cage-h: calc((100vh - var(--screen-header-h) - var(--screen-footer-h)) / 2);
+      --cage-w: calc(var(--cage-h) / 2); /* cage SVG is 60×120, ratio 1:2 */
     }
 
-    .phonemix-dis__lion {
+    .phonemix-id__cage {
       position: absolute;
-      left: 50%;
-      bottom: calc(var(--screen-footer-h) + 4rem);
-      height: calc(100vh - var(--screen-header-h) - var(--screen-footer-h) - 5rem);
+      top: 50%;
+      transform: translateY(-50%);
+      height: var(--cage-h);
       width: auto;
-      transform: translateX(-50%);
       pointer-events: none;
       z-index: 2;
     }
 
-    .phonemix-dis__ball {
+    .phonemix-id__cage--left  { left:  var(--space-12); }
+    .phonemix-id__cage--right { right: var(--space-12); }
+
+    .phonemix-id__football {
       position: absolute;
-      width: 5rem;
-      height: auto;
-      bottom: 1rem;
-      cursor: grab;
-      z-index: 3;
-      animation: 1.8s var(--easing-spring) both;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      height: 100vh;
+      width: auto;
+      pointer-events: none;
     }
 
-    .phonemix-dis__ball--blue {
-      left: 30%;
-      transform: translateX(-50%);
-      animation-name: ball-rise-ccw;
-      animation-delay: 0.2s;
+    .phonemix-id__letter {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: calc(var(--cage-h) * 0.9);
+      font-weight: var(--font-semibold);
+      color: var(--training-phonemix-300);
+      line-height: 1;
+      pointer-events: none;
     }
 
-    .phonemix-dis__ball--red {
-      left: 70%;
-      transform: translateX(-50%);
-      animation-name: ball-rise-cw;
-      animation-delay: 0.5s;
-    }
-
-    @keyframes ball-rise-ccw {
-      from { transform: translateX(-50%) translateY(150vh) rotate(0deg); }
-      to   { transform: translateX(-50%) translateY(0)     rotate(-720deg); }
-    }
-
-    @keyframes ball-rise-cw {
-      from { transform: translateX(-50%) translateY(150vh) rotate(0deg); }
-      to   { transform: translateX(-50%) translateY(0)     rotate(720deg); }
-    }
+    .phonemix-id__letter--d { left:  calc(var(--space-16) + var(--cage-w) + var(--space-8)); }
+    .phonemix-id__letter--t { right: calc(var(--space-16) + var(--cage-w) + var(--space-8)); }
 
     /* ── Feedback (but / oops) ─────────────────────────────────── */
-    .phonemix-dis__feedback {
+    .phonemix-id__feedback {
       position: absolute;
       left: 50%;
       top: 50%;
@@ -128,10 +115,9 @@
       pointer-events: none;
       opacity: 0;
       transform: translate(-50%, -50%) scale(0);
-      z-index: 10;
     }
 
-    .phonemix-dis__feedback--show {
+    .phonemix-id__feedback--show {
       animation: feedback-pop 1.5s linear forwards;
     }
 
@@ -144,6 +130,23 @@
       65%  { transform: translate(-50%, -50%) scale(1);    opacity: 1; }
       80%  { transform: translate(-50%, -50%) scale(1);    opacity: 1; }
       100% { transform: translate(-50%, -50%) scale(0.6);  opacity: 0; }
+    }
+
+    /* ── Ball drop ─────────────────────────────────────────────── */
+    .phonemix-id__ball {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 5rem;
+      height: auto;
+      cursor: grab;
+      z-index: 1;
+      animation: ball-drop 1.8s var(--easing-spring) 0.2s both;
+    }
+
+    @keyframes ball-drop {
+      from { transform: translate(-50%, calc(-50vh - 150%)) rotate(0deg); }
+      to   { transform: translate(-50%, -50%) rotate(720deg); }
     }
   </style>
 </head>
@@ -170,7 +173,7 @@
     </div>
   </div>
 
-  <!-- Dialog — aide Phonemix Discrimination -->
+  <!-- Dialog — aide Phonemix Identification -->
   <div class="dialog-overlay" id="help-overlay">
     <button class="btn btn--icon btn--primary dialog__close" id="btn-dialog-close" aria-label="Fermer">
       <i data-lucide="x" class="text-xl"></i>
@@ -194,7 +197,7 @@
             <button class="btn btn--icon btn--primary" id="btn-pause" aria-label="Pause">
               <i data-lucide="pause" fill="#fff" class="text-2xl"></i>
             </button>
-            <span class="phonemix-dis__title">Phonemix - Discrimination</span>
+            <span class="phonemix-id__title">Phonemix - Identification</span>
           </div>
           <div class="bar-end">
             <div class="count" id="score">3</div>
@@ -203,18 +206,20 @@
         </header>
 
         <main class="screen-body">
-          <img src="assets/illustration/phonemix/cage-front.svg"     class="phonemix-dis__cage-front" alt="">
-          <img src="assets/illustration/phonemix/goal/lion.png"      class="phonemix-dis__lion" alt="">
-          <img src="assets/illustration/phonemix/ball-blue.svg"      class="phonemix-dis__ball phonemix-dis__ball--blue" alt="">
-          <img src="assets/illustration/phonemix/ball-blue-red.svg"  class="phonemix-dis__ball phonemix-dis__ball--red"  alt="">
-          <img src="assets/illustration/phonemix/but.svg"            class="phonemix-dis__feedback" id="fb-but"  alt="">
-          <img src="assets/illustration/phonemix/oops.svg"           class="phonemix-dis__feedback" id="fb-oops" alt="">
+          <img src="../assets/illustration/phonemix/cage-left.svg"     class="phonemix-id__cage phonemix-id__cage--left"  alt="">
+          <span class="phonemix-id__letter phonemix-id__letter--d">D</span>
+          <img src="../assets/illustration/phonemix/football-middle.svg" class="phonemix-id__football" alt="">
+          <span class="phonemix-id__letter phonemix-id__letter--t">T</span>
+          <img src="../assets/illustration/phonemix/cage-right.svg"    class="phonemix-id__cage phonemix-id__cage--right" alt="">
+          <img src="../assets/illustration/phonemix/ball-base.svg"    class="phonemix-id__ball" alt="">
+          <img src="../assets/illustration/phonemix/but.svg"          class="phonemix-id__feedback" id="fb-but"  alt="">
+          <img src="../assets/illustration/phonemix/oops.svg"         class="phonemix-id__feedback" id="fb-oops" alt="">
         </main>
 
         <footer class="screen-footer">
           <div class="bar-start">
             <div class="help">
-              <img src="assets/illustration/think.png" class="help__img" alt="Aide">
+              <img src="../assets/illustration/think.png" class="help__img" alt="Aide">
             </div>
           </div>
         </footer>
@@ -224,7 +229,7 @@
   </div>
 
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-  <script type="module" src="components/main.js"></script>
+  <script type="module" src="../components/main.js"></script>
   <script>
     lucide.createIcons();
 
@@ -254,93 +259,72 @@
     btnPause.addEventListener('click', openPause);
     btnPauseClose.addEventListener('click', closePause);
     btnResume.addEventListener('click', closePause);
-    btnQuit.addEventListener('click', () => { window.location.href = 'home.html'; });
+    btnQuit.addEventListener('click', () => { window.location.href = '../home.html'; });
     pauseOverlay.addEventListener('click', e => { if (e.target === pauseOverlay) closePause(); });
 
-    // ── Gameplay ───────────────────────────────────────────────────
-    const spring    = getComputedStyle(document.documentElement).getPropertyValue('--easing-spring').trim();
-    const ballBlue  = document.querySelector('.phonemix-dis__ball--blue');
-    const ballRed   = document.querySelector('.phonemix-dis__ball--red');
-    const cageFront = document.querySelector('.phonemix-dis__cage-front');
-    const lionImg   = document.querySelector('.phonemix-dis__lion');
-    const fbBut     = document.getElementById('fb-but');
-    const fbOops    = document.getElementById('fb-oops');
+    // ── Ball drag ──────────────────────────────────────────────
+    const ball    = document.querySelector('.phonemix-id__ball');
+    const letterD = document.querySelector('.phonemix-id__letter--d');
+    const letterT = document.querySelector('.phonemix-id__letter--t');
 
-    // Stoppe l'animation CSS initiale et fixe la balle à sa position de repos
-    function stopBallAnim(ball) {
-      ball.style.animation = 'none';
-      ball.style.transform = 'translateX(-50%) translateY(0)';
-    }
-    ballBlue.addEventListener('animationend', () => stopBallAnim(ballBlue));
-    ballRed.addEventListener('animationend',  () => stopBallAnim(ballRed));
-    setTimeout(() => { stopBallAnim(ballBlue); stopBallAnim(ballRed); }, 3000);
+    const MAX_DRAG  = window.innerWidth * 0.3;
+    const MAX_SCALE = 1.3;
+    const THRESHOLD = MAX_DRAG * 0.35;
+    const spring    = getComputedStyle(document.documentElement).getPropertyValue('--easing-spring').trim();
+
+    const fbBut    = document.getElementById('fb-but');
+    const fbOops   = document.getElementById('fb-oops');
+    const cageLeft  = document.querySelector('.phonemix-id__cage--left');
+    const cageRight = document.querySelector('.phonemix-id__cage--right');
+
+    let dragging  = false;
+    let throwing  = false;
+    let originX   = 0;
+    let lastDragX = 0;
 
     function showFeedback(el, onEnd) {
-      el.classList.remove('phonemix-dis__feedback--show');
+      el.classList.remove('phonemix-id__feedback--show');
       void el.offsetWidth;
-      el.classList.add('phonemix-dis__feedback--show');
+      el.classList.add('phonemix-id__feedback--show');
       el.addEventListener('animationend', () => {
-        el.classList.remove('phonemix-dis__feedback--show');
+        el.classList.remove('phonemix-id__feedback--show');
         if (onEnd) onEnd();
       }, { once: true });
     }
 
-    function resetBalls() {
-      [ballBlue, ballRed].forEach(b => {
-        b.style.transition = 'none';
-        b.style.transform  = 'translateX(-50%) translateY(150vh) rotate(0deg)';
-      });
-      void ballBlue.offsetWidth;
-      ballBlue.style.transition = `transform 1.8s ${spring}`;
-      ballBlue.style.transform  = 'translateX(-50%) translateY(0) rotate(-720deg)';
-      setTimeout(() => {
-        ballRed.style.transition = `transform 1.8s ${spring}`;
-        ballRed.style.transform  = 'translateX(-50%) translateY(0) rotate(720deg)';
-      }, 300);
-      setTimeout(() => {
-        [ballBlue, ballRed].forEach(b => {
-          b.style.transition = 'none';
-          b.style.transform  = 'translateX(-50%) translateY(0)';
-        });
-        throwing = false;
-      }, 2300);
+    function dropBallFromTop() {
+      // Téléporter la balle hors écran en haut sans transition
+      ball.style.transition = 'none';
+      ball.style.transform  = 'translate(-50%, calc(-50vh - 150%)) rotate(0deg)';
+      void ball.offsetWidth; // reflow
+      // Rejouer la chute
+      ball.style.transition = `transform 1.8s ${spring}`;
+      ball.style.transform  = 'translate(-50%, -50%) rotate(720deg)';
+      setTimeout(() => { throwing = false; }, 1900);
     }
 
-    let dragging     = false;
-    let throwing     = false;
-    let activeBall   = null;
-    let activeIsBlue = false;
-    let originX      = 0;
-    let originY      = 0;
-    let lastDragX    = 0;
-    let lastDragY    = 0;
+    // Supprime l'animation CSS et fixe la balle à sa position de repos
+    function stopAnimation() {
+      ball.style.animation = 'none';
+      ball.style.transform = 'translate(-50%, -50%)';
+    }
+    ball.addEventListener('animationend', stopAnimation);
+    setTimeout(stopAnimation, 2200); // fallback si animationend ne se déclenche pas
 
-    const MAX_DRAG   = window.innerWidth  * 0.25;
-    const MAX_DRAG_Y = window.innerHeight * 0.25;
-    const THRESHOLD  = MAX_DRAG   * 0.4;
-    const THRESHOLD_Y = MAX_DRAG_Y * 0.3;
-
-    function throwBall(ball, correct) {
+    function throwBall(direction) {
       throwing = true;
-      const cageRect = cageFront.getBoundingClientRect();
-      const ballRect  = ball.getBoundingClientRect();
-      const dx = (cageRect.left + cageRect.width  / 2) - (ballRect.left + ballRect.width  / 2);
-      const dy = (cageRect.top  + cageRect.height / 2) - (ballRect.top  + ballRect.height / 2);
+      const cage = direction === 'right' ? cageRight : cageLeft;
+      const rect = cage.getBoundingClientRect();
+      const cageCenterX = rect.left + rect.width / 2;
+      const targetDX = cageCenterX - window.innerWidth / 2;
 
-      const targetScale = correct ? 0.5 : 0;
+      // Ballon vole vers la cage et rétrécit (reste légèrement visible)
       ball.style.transition = 'transform 0.45s ease-in';
-      ball.style.transform  = `translate(calc(-50% + ${lastDragX + dx}px), ${lastDragY + dy}px) scale(${targetScale})`;
-      lastDragX = 0;
-      lastDragY = 0;
+      ball.style.transform  = `translate(calc(-50% + ${targetDX}px), -50%) scale(0.5)`;
 
       ball.addEventListener('transitionend', () => {
-        lionImg.src = correct
-          ? 'assets/illustration/phonemix/goal/lion-2.png'
-          : 'assets/illustration/phonemix/goal/lion-1.png';
-        showFeedback(correct ? fbBut : fbOops, () => {
-          lionImg.src = 'assets/illustration/phonemix/goal/lion.png';
-          resetBalls();
-        });
+        // Feedback but / oops — quand il se termine, relancer le drop depuis le haut
+        showFeedback(direction === 'right' ? fbBut : fbOops, dropBallFromTop);
       }, { once: true });
     }
 
@@ -348,46 +332,55 @@
       if (!dragging) return;
       dragging = false;
 
-      // Blue doit aller vers la droite + haut, red vers la gauche + haut
-      const triggered = activeIsBlue
-        ? lastDragX > THRESHOLD  && lastDragY < -THRESHOLD_Y
-        : lastDragX < -THRESHOLD && lastDragY < -THRESHOLD_Y;
+      // Réinitialiser les lettres
+      const tr = `transform 0.5s ${spring}`;
+      letterD.style.transition = tr;
+      letterT.style.transition = tr;
+      letterD.style.transform  = 'translateY(-50%) scale(1)';
+      letterT.style.transform  = 'translateY(-50%) scale(1)';
 
-      if (triggered) {
-        throwBall(activeBall, !activeIsBlue);
-        activeBall = null;
+      if (lastDragX > THRESHOLD) {
+        throwBall('right');
+      } else if (lastDragX < -THRESHOLD) {
+        throwBall('left');
       } else {
-        activeBall.style.transition = `transform 0.5s ${spring}`;
-        activeBall.style.transform  = 'translateX(-50%) translateY(0)';
-        activeBall = null;
-        lastDragX  = 0;
-        lastDragY  = 0;
+        ball.style.transition = `transform 0.5s ${spring}`;
+        ball.style.transform  = 'translate(-50%, -50%)';
       }
+      lastDragX = 0;
     }
 
-    [ballBlue, ballRed].forEach((ball, idx) => {
-      const isThisBlue = idx === 0;
-      ball.addEventListener('pointerdown', e => {
-        if (throwing) return;
-        stopBallAnim(ball);
-        dragging     = true;
-        activeBall   = ball;
-        activeIsBlue = isThisBlue;
-        originX      = e.clientX;
-        originY      = e.clientY;
-        lastDragX    = 0;
-        lastDragY    = 0;
-        ball.style.transition = 'none';
-        ball.setPointerCapture(e.pointerId);
-        e.preventDefault();
-      });
+    ball.addEventListener('pointerdown', e => {
+      if (throwing) return;
+      stopAnimation();
+      dragging = true;
+      originX  = e.clientX;
+      ball.style.transition    = 'none';
+      letterD.style.transition = 'none';
+      letterT.style.transition = 'none';
+      ball.setPointerCapture(e.pointerId);
+      e.preventDefault();
     });
 
     document.addEventListener('pointermove', e => {
-      if (!dragging || !activeBall) return;
-      lastDragX = e.clientX - originX;
-      lastDragY = e.clientY - originY;
-      activeBall.style.transform = `translate(calc(-50% + ${lastDragX}px), ${lastDragY}px)`;
+      if (!dragging) return;
+      const dragX = e.clientX - originX;
+      const ratio = Math.min(Math.abs(dragX) / MAX_DRAG, 1);
+      const scale = 1 + ratio * (MAX_SCALE - 1);
+
+      lastDragX = dragX;
+      ball.style.transform = `translate(calc(-50% + ${dragX}px), -50%)`;
+
+      if (dragX > 0) {
+        letterT.style.transform = `translateY(-50%) scale(${scale})`;
+        letterD.style.transform = 'translateY(-50%) scale(1)';
+      } else if (dragX < 0) {
+        letterD.style.transform = `translateY(-50%) scale(${scale})`;
+        letterT.style.transform = 'translateY(-50%) scale(1)';
+      } else {
+        letterD.style.transform = 'translateY(-50%) scale(1)';
+        letterT.style.transform = 'translateY(-50%) scale(1)';
+      }
     });
 
     document.addEventListener('pointerup',     releaseBall);

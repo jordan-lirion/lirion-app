@@ -9,11 +9,11 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Lirion">
   <meta name="theme-color" content="#facc15">
-  <link rel="apple-touch-icon" href="assets/icons/icon-180.png">
-  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="../assets/icons/icon-180.png">
+  <link rel="manifest" href="../manifest.json">
   <!-- === /PWA === -->
   <title>Lirion — Phonemix · Discrimination · Test</title>
-  <link rel="stylesheet" href="components/main.css">
+  <link rel="stylesheet" href="../components/main.css">
   <style>
     .game-canvas {
       background: var(--training-phonemix-200);
@@ -201,19 +201,19 @@
         </header>
 
         <main class="screen-body">
-          <img src="assets/illustration/phonemix/player/lion-3.png" class="phonemix-dis__lion3" alt="">
-          <img src="assets/illustration/phonemix/player/lion-2.png" class="phonemix-dis__lion2" alt="">
-          <img src="assets/illustration/phonemix/player/lion-4.png" class="phonemix-dis__lion4" alt="">
-          <img src="assets/illustration/phonemix/ball-blue.svg"     class="phonemix-dis__ball phonemix-dis__ball--blue" alt="">
-          <img src="assets/illustration/phonemix/ball-blue-red.svg" class="phonemix-dis__ball phonemix-dis__ball--red"  alt="">
-          <img src="assets/illustration/phonemix/success.svg"       class="phonemix-dis__feedback" id="fb-success" alt="">
-          <img src="assets/illustration/phonemix/error.svg"         class="phonemix-dis__feedback" id="fb-error"   alt="">
+          <img src="../assets/illustration/phonemix/player/lion-3.png" class="phonemix-dis__lion3" alt="">
+          <img src="../assets/illustration/phonemix/player/lion-2.png" class="phonemix-dis__lion2" alt="">
+          <img src="../assets/illustration/phonemix/player/lion-4.png" class="phonemix-dis__lion4" alt="">
+          <img src="../assets/illustration/phonemix/ball-blue.svg"     class="phonemix-dis__ball phonemix-dis__ball--blue" alt="">
+          <img src="../assets/illustration/phonemix/ball-blue-red.svg" class="phonemix-dis__ball phonemix-dis__ball--red"  alt="">
+          <img src="../assets/illustration/phonemix/success.svg"       class="phonemix-dis__feedback" id="fb-success" alt="">
+          <img src="../assets/illustration/phonemix/error.svg"         class="phonemix-dis__feedback" id="fb-error"   alt="">
         </main>
 
         <footer class="screen-footer">
           <div class="bar-start">
             <div class="help">
-              <img src="assets/illustration/think.png" class="help__img" alt="Aide">
+              <img src="../assets/illustration/think.png" class="help__img" alt="Aide">
             </div>
           </div>
         </footer>
@@ -223,7 +223,7 @@
   </div>
 
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-  <script type="module" src="components/main.js"></script>
+  <script type="module" src="../components/main.js"></script>
   <script>
     lucide.createIcons();
 
@@ -253,7 +253,7 @@
     btnPause.addEventListener('click', openPause);
     btnPauseClose.addEventListener('click', closePause);
     btnResume.addEventListener('click', closePause);
-    btnQuit.addEventListener('click', () => { window.location.href = 'home.html'; });
+    btnQuit.addEventListener('click', () => { window.location.href = '../home.html'; });
     pauseOverlay.addEventListener('click', e => { if (e.target === pauseOverlay) closePause(); });
 
     // ── Gameplay ───────────────────────────────────────────────────

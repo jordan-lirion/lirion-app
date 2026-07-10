@@ -9,11 +9,11 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Lirion">
   <meta name="theme-color" content="#facc15">
-  <link rel="apple-touch-icon" href="assets/icons/icon-180.png">
-  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="../assets/icons/icon-180.png">
+  <link rel="manifest" href="../manifest.json">
   <!-- === /PWA === -->
   <title>Lirion — Memoson · Cache Cache</title>
-  <link rel="stylesheet" href="components/main.css">
+  <link rel="stylesheet" href="../components/main.css">
   <style>
     .game-canvas {
       background: var(--training-memoson-200);
@@ -215,7 +215,7 @@
         <footer class="screen-footer">
           <div class="bar-start">
             <div class="help">
-              <img src="assets/illustration/think.png" class="help__img" alt="Aide">
+              <img src="../assets/illustration/think.png" class="help__img" alt="Aide">
             </div>
           </div>
           <div class="bar-end">
@@ -236,7 +236,7 @@
   </div>
 
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-  <script type="module" src="components/main.js"></script>
+  <script type="module" src="../components/main.js"></script>
   <script>
     lucide.createIcons();
 
@@ -265,7 +265,7 @@
     btnPause.addEventListener('click', openPause);
     btnPauseClose.addEventListener('click', closePause);
     btnResume.addEventListener('click', closePause);
-    btnQuit.addEventListener('click', () => { window.location.href = 'home.html'; });
+    btnQuit.addEventListener('click', () => { window.location.href = '../home.html'; });
     pauseOverlay.addEventListener('click', e => { if (e.target === pauseOverlay) closePause(); });
 
     // ── Game ───────────────────────────────────────────────────────
@@ -342,6 +342,9 @@
     });
 
     btnPlay.addEventListener('click', () => startGame());
+
+    // ── Redirection en fin de timer (5 min) ───────────────────────
+    setTimeout(() => { window.location.href = 'memoson-congrats.html'; }, 5 * 60 * 1000);
   </script>
 </body>
 </html>

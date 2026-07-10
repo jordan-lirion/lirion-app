@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <!-- === PWA / Web App iOS === -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Lirion">
+  <meta name="theme-color" content="#facc15">
+  <link rel="apple-touch-icon" href="assets/icons/icon-180.png">
+  <link rel="manifest" href="manifest.json">
+  <!-- === /PWA === -->
+  <title>Lirion — Fin de séance</title>
+  <link rel="stylesheet" href="components/main.css">
+  <style>
+    .game-canvas {
+      background: var(--muted);
+    }
+
+    /* ── Background rotatif ────────────────────────────────────── */
+    .congrats-bg {
+      position: absolute;
+      inset: -50%;
+      background: url('assets/illustration/congrats.png') center / cover no-repeat;
+      animation: congrats-spin 60s linear infinite;
+    }
+
+    @keyframes congrats-spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+/* ── Screen body — scroll horizontal ───────────────────────── */
+    /* ── Card wrapper + pastille succès ───────────────────────── */
+    .card-wrapper {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .card-badge {
+      position: absolute;
+      top: -0.75rem;
+      right: -0.75rem;
+      width: 3rem;
+      height: 3rem;
+      font-size: var(--text-xl);
+      border: 2px solid oklch(1 0 0);
+    }
+
+    .screen-body {
+      padding-left: 0;
+      padding-right: 0;
+      justify-content: flex-start;
+      scrollbar-width: none;
+      scroll-snap-type: x mandatory;
+    }
+    .screen-body::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* ── Cards ─────────────────────────────────────────────────── */
+    .card-training {
+      width: 40vw;
+      scroll-snap-align: center;
+    }
+
+    .home-cards-track {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: var(--space-5);
+      flex-shrink: 0;
+      padding-left: 30vw;
+      padding-right: 30vw;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="game-viewport">
+    <div class="game-canvas">
+      <div class="congrats-bg"></div>
+      <div class="screen screen-layout">
+
+        <header class="screen-header">
+          <div class="bar-start">
+            <button class="btn btn--icon btn--primary" id="btn-close" aria-label="Fermer">
+              <i data-lucide="x" class="text-2xl"></i>
+            </button>
+          </div>
+          <div class="bar-end"></div>
+        </header>
+
+        <main class="screen-body">
+          <div class="home-cards-track">
+
+            <div class="card-wrapper">
+              <div class="card-training card-training--memoson card-training--disabled" data-training="memoson" data-href="Memoson/memoson-d.html">
+                <div class="card-training__icon-area">
+                  <div class="card-training__icon-circle">
+                    <img src="assets/training/memoson.svg" class="card-training__icon" alt="">
+                  </div>
+                  <span class="badge">Niveau 1</span>
+                </div>
+                <div class="card-training__footer">
+                  <span class="card-training__title">Memoson Différences</span>
+                </div>
+              </div>
+              <div class="badge-icon badge-icon--success card-badge">
+                <i data-lucide="check" class="text-2xl"></i>
+              </div>
+            </div>
+
+            <div class="card-wrapper">
+              <div class="card-training card-training--fus-seg card-training--disabled" data-training="fus-seg">
+                <div class="card-training__icon-area">
+                  <div class="card-training__icon-circle">
+                    <img src="assets/training/fus-seg.svg" class="card-training__icon" alt="">
+                  </div>
+                  <span class="badge">Niveau 1</span>
+                </div>
+                <div class="card-training__footer">
+                  <span class="card-training__title">Fus-Seg</span>
+                </div>
+              </div>
+              <div class="badge-icon badge-icon--success card-badge">
+                <i data-lucide="check" class="text-2xl"></i>
+              </div>
+            </div>
+
+          </div>
+        </main>
+
+
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script type="module" src="components/main.js"></script>
+  <script>
+    lucide.createIcons();
+
+    const cards           = document.querySelectorAll('.card-training');
+    const scrollContainer = document.querySelector('.screen-body');
+
+    function centerCard(card, smooth = true) {
+      const containerWidth = scrollContainer.offsetWidth;
+      const target = card.offsetLeft + card.offsetWidth / 2 - containerWidth / 2;
+      scrollContainer.scrollTo({ left: target, behavior: smooth ? 'smooth' : 'instant' });
+    }
+
+    function activateCard(card) {
+      cards.forEach(c => c.classList.remove('card-training--active'));
+      card.classList.add('card-training--active');
+    }
+
+    function getCardAtCenter() {
+      const containerCenter = scrollContainer.getBoundingClientRect().left + scrollContainer.offsetWidth / 2;
+      let closest = null;
+      let minDist = Infinity;
+      cards.forEach(card => {
+        const rect = card.getBoundingClientRect();
+        const dist = Math.abs(rect.left + rect.width / 2 - containerCenter);
+        if (dist < minDist) { minDist = dist; closest = card; }
+      });
+      return closest;
+    }
+
+    let scrollTimer = null;
+    scrollContainer.addEventListener('scroll', () => {
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(() => {
+        const card = getCardAtCenter();
+        if (card) activateCard(card);
+      }, 80);
+    });
+
+    cards.forEach(card => card.addEventListener('click', () => {
+      if (card.classList.contains('card-training--active')) {
+        if (card.dataset.href) window.location.href = card.dataset.href;
+      } else {
+        activateCard(card);
+        centerCard(card);
+      }
+    }));
+
+    const initialCard = document.querySelector('.card-training--active');
+    if (initialCard) centerCard(initialCard, false);
+
+    document.getElementById('btn-close').addEventListener('click', () => {
+      window.location.href = 'home.html';
+    });
+  </script>
+</body>
+</html>

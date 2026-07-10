@@ -81,6 +81,13 @@
   line-height: var(--leading-tight);
 }
 
+/* ── Disabled ────────────────────────────────────────────────── */
+.card-training--disabled {
+  opacity: 0.64;
+  cursor: default;
+  pointer-events: none;
+}
+
 /* ── Color variants (11 trainings) ──────────────────────────── */
 .card-training--larma {
   --card-training-bg:   var(--training-larma-200);

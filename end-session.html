@@ -32,107 +32,244 @@
       to   { transform: rotate(360deg); }
     }
 
-/* ── Screen body — scroll horizontal ───────────────────────── */
-    /* ── Card wrapper + pastille succès ───────────────────────── */
-    .card-wrapper {
+    /* ── Panes ─────────────────────────────────────────────────── */
+    .session__pane--lion {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .session__pane--cards {
+      flex: 2;
+      flex-direction: column;
+      gap: var(--space-4);
+      padding: var(--space-5);
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ── Lion ──────────────────────────────────────────────────── */
+    .session__lion {
+      position: absolute;
+      bottom: -15%;
+      left: 50%;
+      transform: translateX(-50%);
+      height: 95%;
+      width: auto;
+    }
+
+    /* ── Cards ─────────────────────────────────────────────────── */
+    .session__card {
+      width: 100%;
+    }
+
+    .session__card--memoson {
+      --training-color:      var(--training-memoson-200);
+      --training-color-dark: var(--training-memoson-300);
+    }
+
+    .session__card--fus-seg {
+      --training-color:      var(--training-fus-seg-200);
+      --training-color-dark: var(--training-fus-seg-300);
+    }
+
+    /* ── Stats row ─────────────────────────────────────────────── */
+    .stats-row {
+      display: flex;
+      flex-direction: row;
+      gap: var(--space-4);
+      align-items: flex-start;
+      justify-content: center;
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .stat-circle {
+      width: 4rem;
+      height: 4rem;
+      border-radius: var(--radius-full);
+      background: var(--training-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
       position: relative;
       flex-shrink: 0;
     }
 
-    .card-badge {
+    .stat-circle__icon {
+      width: 2rem;
+      height: 2rem;
+      filter: brightness(0) invert(1);
+    }
+
+    .stat-circle__value {
+      font-size: var(--text-2xl);
+      font-weight: var(--font-bold);
+      color: oklch(1 0 0);
+    }
+
+    .stat-circle__badge {
       position: absolute;
-      top: -0.75rem;
-      right: -0.75rem;
-      width: 3rem;
-      height: 3rem;
-      font-size: var(--text-xl);
+      top: -0.25rem;
+      right: -0.25rem;
+      width: 1.5rem;
+      height: 1.5rem;
+      font-size: var(--text-xs);
       border: 2px solid oklch(1 0 0);
     }
 
-    .screen-body {
-      padding-left: 0;
-      padding-right: 0;
-      justify-content: flex-start;
-      scrollbar-width: none;
-      scroll-snap-type: x mandatory;
-    }
-    .screen-body::-webkit-scrollbar {
-      display: none;
+    .stat-label {
+      font-size: var(--text-sm);
+      font-weight: var(--font-medium);
+      color: var(--foreground);
+      text-align: center;
+      white-space: nowrap;
     }
 
-    /* ── Cards ─────────────────────────────────────────────────── */
-    .card-training {
-      width: 40vw;
-      scroll-snap-align: center;
+    /* ── Circular progress ─────────────────────────────────────── */
+    @property --progress-angle-1 {
+      syntax: '<angle>';
+      inherits: false;
+      initial-value: 0deg;
     }
 
-    .home-cards-track {
+    @property --progress-angle-2 {
+      syntax: '<angle>';
+      inherits: false;
+      initial-value: 0deg;
+    }
+
+    #progress-1 {
+      --progress-angle: var(--progress-angle-1);
+    }
+
+    #progress-2 {
+      --progress-angle: var(--progress-angle-2);
+    }
+
+    .congrats-progress {
+      width: 4rem;
+      height: 4rem;
+      border-radius: var(--radius-full);
+      background: conic-gradient(
+        var(--training-color-dark) 0deg,
+        var(--training-color-dark) var(--progress-angle),
+        var(--training-color) var(--progress-angle)
+      );
       display: flex;
-      flex-direction: row;
       align-items: center;
-      gap: var(--space-5);
-      flex-shrink: 0;
-      padding-left: 30vw;
-      padding-right: 30vw;
+      justify-content: center;
     }
 
+    .congrats-progress__label {
+      font-size: var(--text-2xl);
+      font-weight: var(--font-bold);
+      color: oklch(1 0 0);
+    }
   </style>
 </head>
 <body>
   <div class="game-viewport">
     <div class="game-canvas">
       <div class="congrats-bg"></div>
-      <div class="screen screen-layout">
+      <div class="screen">
 
-        <header class="screen-header">
-          <div class="bar-start">
-            <button class="btn btn--icon btn--primary" id="btn-close" aria-label="Fermer">
-              <i data-lucide="x" class="text-2xl"></i>
-            </button>
+        <main class="screen-body screen-body--split">
+
+          <div class="screen-pane session__pane--lion">
+            <img src="assets/illustration/sucess.png" class="session__lion" alt="">
           </div>
-          <div class="bar-end"></div>
-        </header>
 
-        <main class="screen-body">
-          <div class="home-cards-track">
+          <div class="screen-pane session__pane--cards">
 
-            <div class="card-wrapper">
-              <div class="card-training card-training--memoson card-training--disabled" data-training="memoson" data-href="Memoson/memoson-d.html">
-                <div class="card-training__icon-area">
-                  <div class="card-training__icon-circle">
-                    <img src="assets/training/memoson.svg" class="card-training__icon" alt="">
+            <!-- Card 1 — Memoson -->
+            <div class="card session__card--memoson">
+              <div class="card__content">
+                <div class="stats-row">
+
+                  <div class="stat-item">
+                    <div class="stat-circle">
+                      <img src="assets/training/memoson.svg" class="stat-circle__icon" alt="">
+                      <div class="badge-icon badge-icon--success stat-circle__badge">
+                        <i data-lucide="check" class="text-xs"></i>
+                      </div>
+                    </div>
+                    <span class="stat-label">Memoson</span>
                   </div>
-                  <span class="badge">Niveau 1</span>
+
+                  <div class="stat-item">
+                    <div class="stat-circle">
+                      <span class="stat-circle__value">3</span>
+                    </div>
+                    <span class="stat-label">Bonnes réponses</span>
+                  </div>
+
+                  <div class="stat-item">
+                    <div class="congrats-progress" id="progress-1">
+                      <span class="congrats-progress__label" id="level-label-1">1</span>
+                    </div>
+                    <span class="stat-label">Niveau</span>
+                  </div>
+
+                  <div class="stat-item">
+                    <div class="stat-circle">
+                      <span class="stat-circle__value">10</span>
+                    </div>
+                    <span class="stat-label">Minutes</span>
+                  </div>
+
                 </div>
-                <div class="card-training__footer">
-                  <span class="card-training__title">Memoson Différences</span>
-                </div>
-              </div>
-              <div class="badge-icon badge-icon--success card-badge">
-                <i data-lucide="check" class="text-2xl"></i>
               </div>
             </div>
 
-            <div class="card-wrapper">
-              <div class="card-training card-training--fus-seg card-training--disabled" data-training="fus-seg">
-                <div class="card-training__icon-area">
-                  <div class="card-training__icon-circle">
-                    <img src="assets/training/fus-seg.svg" class="card-training__icon" alt="">
+            <!-- Card 2 — Fus-Seg -->
+            <div class="card session__card--fus-seg">
+              <div class="card__content">
+                <div class="stats-row">
+
+                  <div class="stat-item">
+                    <div class="stat-circle">
+                      <img src="assets/training/fus-seg.svg" class="stat-circle__icon" alt="">
+                      <div class="badge-icon badge-icon--success stat-circle__badge">
+                        <i data-lucide="check" class="text-xs"></i>
+                      </div>
+                    </div>
+                    <span class="stat-label">Fusion</span>
                   </div>
-                  <span class="badge">Niveau 1</span>
+
+                  <div class="stat-item">
+                    <div class="stat-circle">
+                      <span class="stat-circle__value">32</span>
+                    </div>
+                    <span class="stat-label">Bonnes réponses</span>
+                  </div>
+
+                  <div class="stat-item">
+                    <div class="congrats-progress" id="progress-2">
+                      <span class="congrats-progress__label" id="level-label-2">12</span>
+                    </div>
+                    <span class="stat-label">Niveau</span>
+                  </div>
+
+                  <div class="stat-item">
+                    <div class="stat-circle">
+                      <span class="stat-circle__value">5</span>
+                    </div>
+                    <span class="stat-label">Minutes</span>
+                  </div>
+
                 </div>
-                <div class="card-training__footer">
-                  <span class="card-training__title">Fus-Seg</span>
-                </div>
-              </div>
-              <div class="badge-icon badge-icon--success card-badge">
-                <i data-lucide="check" class="text-2xl"></i>
               </div>
             </div>
 
           </div>
+
         </main>
-
 
       </div>
     </div>
@@ -143,56 +280,9 @@
   <script>
     lucide.createIcons();
 
-    const cards           = document.querySelectorAll('.card-training');
-    const scrollContainer = document.querySelector('.screen-body');
-
-    function centerCard(card, smooth = true) {
-      const containerWidth = scrollContainer.offsetWidth;
-      const target = card.offsetLeft + card.offsetWidth / 2 - containerWidth / 2;
-      scrollContainer.scrollTo({ left: target, behavior: smooth ? 'smooth' : 'instant' });
-    }
-
-    function activateCard(card) {
-      cards.forEach(c => c.classList.remove('card-training--active'));
-      card.classList.add('card-training--active');
-    }
-
-    function getCardAtCenter() {
-      const containerCenter = scrollContainer.getBoundingClientRect().left + scrollContainer.offsetWidth / 2;
-      let closest = null;
-      let minDist = Infinity;
-      cards.forEach(card => {
-        const rect = card.getBoundingClientRect();
-        const dist = Math.abs(rect.left + rect.width / 2 - containerCenter);
-        if (dist < minDist) { minDist = dist; closest = card; }
-      });
-      return closest;
-    }
-
-    let scrollTimer = null;
-    scrollContainer.addEventListener('scroll', () => {
-      clearTimeout(scrollTimer);
-      scrollTimer = setTimeout(() => {
-        const card = getCardAtCenter();
-        if (card) activateCard(card);
-      }, 80);
-    });
-
-    cards.forEach(card => card.addEventListener('click', () => {
-      if (card.classList.contains('card-training--active')) {
-        if (card.dataset.href) window.location.href = card.dataset.href;
-      } else {
-        activateCard(card);
-        centerCard(card);
-      }
-    }));
-
-    const initialCard = document.querySelector('.card-training--active');
-    if (initialCard) centerCard(initialCard, false);
-
-    document.getElementById('btn-close').addEventListener('click', () => {
-      window.location.href = 'home.html';
-    });
+    // ── Circular progress — valeurs fixes ─────────────────────────
+    document.getElementById('progress-1').style.setProperty('--progress-angle-1', (25 * 3.6) + 'deg');
+    document.getElementById('progress-2').style.setProperty('--progress-angle-2', (47 * 3.6) + 'deg');
   </script>
 </body>
 </html>

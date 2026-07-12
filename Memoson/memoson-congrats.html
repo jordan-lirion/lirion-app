@@ -42,72 +42,117 @@
       background: color-mix(in oklab, var(--training-memoson-200) 85%, black);
     }
 
-    /* ── Bravo illustration ────────────────────────────────────── */
-    .congrats-bravo {
-      height: 6rem;
-      width: auto;
-    }
-
-    /* ── Screen body — colonne centrée ─────────────────────────── */
-    .screen-body {
-      flex-direction: column;
-      gap: var(--space-4);
-      padding-bottom: calc(var(--height-xl) + var(--space-2) * 2);
-    }
-
-    /* ── Item — badge succès ───────────────────────────────────── */
-    .congrats-item {
-      display: inline-flex;
-      align-items: center;
-      gap: var(--space-3);
-      height: 3.25rem;
-      padding: 0 var(--space-8);
-      background: var(--success);
-      border: 2px solid oklch(1 0 0);
-      border-radius: var(--radius-full);
-      color: oklch(1 0 0);
-      font-size: var(--text-xl);
-      font-weight: var(--font-semibold);
-      white-space: nowrap;
-    }
-
-    /* ── Progress — jauge de niveau ────────────────────────────── */
-    .congrats-progress {
+    /* ── Panes ─────────────────────────────────────────────────── */
+    .congrats__pane--lion {
+      flex: 1;
       position: relative;
-      width: 17rem;
-      height: 3.25rem;
-      background: var(--training-memoson-300);
-      border: 2px solid oklch(1 0 0);
-      border-radius: var(--radius-full);
       overflow: hidden;
     }
 
-    .congrats-progress__fill {
-      position: absolute;
-      inset-block: 0;
-      left: 0;
-      width: 0%;
-      background: var(--training-memoson-200);
-      transition: width 100ms linear;
+    .congrats__pane--form {
+      flex: 2;
     }
 
-    .congrats-progress__label {
+    /* ── Lion ──────────────────────────────────────────────────── */
+    .congrats__lion {
       position: absolute;
-      inset: 0;
+      bottom: -15%;
+      left: 50%;
+      transform: translateX(-50%);
+      height: 95%;
+      width: auto;
+    }
+
+    /* ── Card ──────────────────────────────────────────────────── */
+    .congrats__card {
+      width: 100%;
+      max-width: 24rem;
+    }
+
+    /* ── Stats row ─────────────────────────────────────────────── */
+    .stats-row {
+      display: flex;
+      flex-direction: row;
+      gap: var(--space-4);
+      align-items: flex-start;
+      justify-content: center;
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .stat-circle {
+      width: 4rem;
+      height: 4rem;
+      border-radius: var(--radius-full);
+      background: var(--training-memoson-200);
       display: flex;
       align-items: center;
       justify-content: center;
-      color: oklch(1 0 0);
-      font-size: var(--text-xl);
-      font-weight: var(--font-semibold);
+      position: relative;
+      flex-shrink: 0;
     }
 
-    /* ── Bouton suivant — ancré en bas ────────────────────────── */
-    #btn-next {
+    .stat-circle__icon {
+      width: 2rem;
+      height: 2rem;
+      filter: brightness(0) invert(1);
+    }
+
+    .stat-circle__value {
+      font-size: var(--text-2xl);
+      font-weight: var(--font-bold);
+      color: oklch(1 0 0);
+    }
+
+    .stat-circle__badge {
       position: absolute;
-      bottom: var(--space-6);
-      left: 50%;
-      transform: translateX(-50%);
+      top: -0.25rem;
+      right: -0.25rem;
+      width: 1.5rem;
+      height: 1.5rem;
+      font-size: var(--text-xs);
+      border: 2px solid oklch(1 0 0);
+    }
+
+    .stat-label {
+      font-size: var(--text-sm);
+      font-weight: var(--font-medium);
+      color: var(--foreground);
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    /* ── Circular progress ─────────────────────────────────────── */
+    @property --progress-angle {
+      syntax: '<angle>';
+      inherits: false;
+      initial-value: 0deg;
+    }
+
+    .congrats-progress {
+      --progress-angle: 0deg;
+      width: 4rem;
+      height: 4rem;
+      border-radius: var(--radius-full);
+      background: conic-gradient(
+        var(--training-memoson-300) 0deg,
+        var(--training-memoson-300) var(--progress-angle),
+        var(--training-memoson-200) var(--progress-angle)
+      );
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .congrats-progress__label {
+      font-size: var(--text-2xl);
+      font-weight: var(--font-bold);
+      color: oklch(1 0 0);
     }
   </style>
 </head>
@@ -152,24 +197,69 @@
               <i data-lucide="x" class="text-2xl"></i>
             </button>
           </div>
-          <div class="bar-end" style="width: var(--height-md);" aria-hidden="true"></div>
         </header>
 
-        <main class="screen-body">
-          <img src="../assets/illustration/bravo.png" class="congrats-bravo" alt="Bravo !">
-          <div class="congrats-item">
-            <i data-lucide="check" class="text-xl"></i>
-            3 bonnes réponses
-          </div>
-          <div class="congrats-progress">
-            <div class="congrats-progress__fill" id="progress-fill"></div>
-            <span class="congrats-progress__label" id="level-label">Niveau 1</span>
-          </div>
-        </main>
+        <main class="screen-body screen-body--split">
 
-        <button class="btn btn--primary btn--lg" id="btn-next">
-          Entrainement suivant
-        </button>
+          <div class="screen-pane congrats__pane--lion">
+            <img src="../assets/illustration/sucess.png" class="congrats__lion" alt="">
+          </div>
+
+          <div class="screen-pane congrats__pane--form">
+            <div class="card congrats__card">
+
+              <div class="card__content">
+                <div class="stats-row">
+
+                  <!-- Memoson -->
+                  <div class="stat-item">
+                    <div class="stat-circle">
+                      <img src="../assets/training/memoson.svg" class="stat-circle__icon" alt="">
+                      <div class="badge-icon badge-icon--success stat-circle__badge">
+                        <i data-lucide="check" class="text-xs"></i>
+                      </div>
+                    </div>
+                    <span class="stat-label">Memoson</span>
+                  </div>
+
+                  <!-- Bonnes réponses -->
+                  <div class="stat-item">
+                    <div class="stat-circle">
+                      <span class="stat-circle__value">3</span>
+                    </div>
+                    <span class="stat-label">Bonnes réponses</span>
+                  </div>
+
+                  <!-- Niveau — progress circulaire -->
+                  <div class="stat-item">
+                    <div class="congrats-progress" id="progress-circle">
+                      <span class="congrats-progress__label" id="level-label">1</span>
+                    </div>
+                    <span class="stat-label">Niveau</span>
+                  </div>
+
+                  <!-- Minutes -->
+                  <div class="stat-item">
+                    <div class="stat-circle">
+                      <span class="stat-circle__value">10</span>
+                    </div>
+                    <span class="stat-label">Minutes</span>
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="card__footer">
+                <button class="btn btn--default btn--lg btn--full" id="btn-next">
+                  Entrainement Suivant
+                  <i data-lucide="arrow-right" class="text-xl"></i>
+                </button>
+              </div>
+
+            </div>
+          </div>
+
+        </main>
 
       </div>
     </div>
@@ -196,8 +286,8 @@
     btnQuit.addEventListener('click', () => { window.location.href = '../home.html'; });
     pauseOverlay.addEventListener('click', e => { if (e.target === pauseOverlay) closePause(); });
 
-    // ── Level progress ─────────────────────────────────────────────
-    const fill       = document.getElementById('progress-fill');
+    // ── Circular progress ──────────────────────────────────────────
+    const progressEl = document.getElementById('progress-circle');
     const levelLabel = document.getElementById('level-label');
 
     let level = 1;
@@ -208,9 +298,9 @@
       if (pct > 100) {
         pct = 0;
         level++;
-        levelLabel.textContent = `Niveau ${level}`;
+        levelLabel.textContent = level;
       }
-      fill.style.width = pct + '%';
+      progressEl.style.setProperty('--progress-angle', (pct * 3.6) + 'deg');
     }, 50);
 
     // ── Navigation ─────────────────────────────────────────────────

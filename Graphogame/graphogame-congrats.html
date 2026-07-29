@@ -85,7 +85,7 @@
       width: 3.5rem;
       height: 3.5rem;
       border-radius: var(--radius-full);
-      background: var(--training-graphogame-300);
+      background: var(--training-graphogame-200);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -126,7 +126,7 @@
     }
 
     .result-row__badge {
-      background: var(--training-graphogame-300);
+      background: var(--training-graphogame-200);
       color: oklch(1 0 0);
       font-size: var(--text-sm);
       font-weight: var(--font-semibold);
@@ -229,6 +229,12 @@
   <script type="module" src="../components/main.js"></script>
   <script>
     lucide.createIcons();
+
+    // ── Durée de session ───────────────────────────────────────────
+    const savedDuration = sessionStorage.getItem('graphogame-duration');
+    if (savedDuration !== null) {
+      document.querySelector('.result-row__badge').textContent = savedDuration + ' min';
+    }
 
     // ── Pause overlay ──────────────────────────────────────────────
     const pauseOverlay  = document.getElementById('pause-overlay');

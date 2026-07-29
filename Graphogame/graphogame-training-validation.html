@@ -117,6 +117,10 @@
       color: var(--foreground);
       flex-shrink: 0;
     }
+    .stepper__btn:disabled {
+      opacity: 0.32;
+      cursor: default;
+    }
     .stepper__btn:hover {
       background: var(--muted);
     }
@@ -131,9 +135,10 @@
 
     /* ── Info dialog image ─────────────────────────────────────── */
     .info-screenshot {
-      width: 100%;
+      width: 50%;
       border-radius: var(--radius-xl);
       display: block;
+      margin: 0 auto;
     }
 
     /* ── Floating audio button ─────────────────────────────────── */
@@ -173,7 +178,7 @@
         <div class="dialog">
           <div class="dialog__content">
             <h2 class="dialog__title text-center">Cliquez sur le chronomètre pour afficher la durée de la session</h2>
-            <img src="../assets/graphogame/timer-help.png" class="info-screenshot" alt="Chronomètre Graphogame">
+            <img src="../assets/illustration/graphogame/timer-help.png" class="info-screenshot" alt="Chronomètre Graphogame">
           </div>
         </div>
       </div>
@@ -267,21 +272,29 @@
     infoOverlay.addEventListener('click', e => { if (e.target === infoOverlay) closeInfo(); });
 
     // ── Stepper ────────────────────────────────────────────────────
-    const display = document.getElementById('duration-display');
-    let duration  = 0;
+    const display  = document.getElementById('duration-display');
+    const btnMinus = document.getElementById('btn-minus');
+    let duration   = 0;
 
-    document.getElementById('btn-minus').addEventListener('click', () => {
-      if (duration > 0) duration--;
-      display.textContent = duration + ' min';
+    function updateStepper() {
+      display.textContent  = duration + ' min';
+      btnMinus.disabled    = duration === 0;
+    }
+
+    btnMinus.addEventListener('click', () => {
+      if (duration > 0) { duration--; updateStepper(); }
     });
 
     document.getElementById('btn-plus').addEventListener('click', () => {
       duration++;
-      display.textContent = duration + ' min';
+      updateStepper();
     });
+
+    updateStepper();
 
     // ── Navigation ─────────────────────────────────────────────────
     document.getElementById('btn-finish').addEventListener('click', () => {
+      sessionStorage.setItem('graphogame-duration', duration);
       window.location.href = 'graphogame-congrats.html';
     });
   </script>

@@ -56,7 +56,7 @@
 </head>
 <body>
   <div class="game-viewport">
-    <div class="game-canvas" id="game-canvas" style="background: var(--training-larma-100)">
+    <div class="game-canvas" id="game-canvas" style="background: var(--training-larma-200)">
       <div class="screen screen-layout">
 
         <header class="screen-header">
@@ -82,7 +82,7 @@
             </div>
 
             <!-- Graphogame -->
-            <div class="card-training card-training--graphogame" data-training="graphogame">
+            <div class="card-training card-training--graphogame" data-training="graphogame" data-href="Graphogame/graphogame-prerequisites.html">
               <div class="card-training__icon-area">
                 <div class="card-training__icon-circle">
                   <img src="assets/training/graphogame.svg" class="card-training__icon" alt="">
@@ -287,7 +287,7 @@
 
     function activateCard(card) {
       const training = card.dataset.training;
-      canvas.style.background = `var(--training-${training}-100)`;
+      canvas.style.background = `var(--training-${training}-200)`;
       cards.forEach(c => c.classList.remove('card-training--active'));
       card.classList.add('card-training--active');
     }

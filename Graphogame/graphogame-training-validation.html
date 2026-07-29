@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <!-- === PWA / Web App iOS === -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Lirion">
+  <meta name="theme-color" content="#facc15">
+  <link rel="apple-touch-icon" href="../assets/icons/icon-180.png">
+  <link rel="manifest" href="../manifest.json">
+  <!-- === /PWA === -->
+  <title>Lirion — Graphogame · Validation</title>
+  <link rel="stylesheet" href="../components/main.css">
+  <style>
+    .game-canvas {
+      background: var(--training-graphogame-200);
+    }
+
+    /* ── Back button ───────────────────────────────────────────── */
+    .screen-header .btn--icon {
+      background: var(--training-graphogame-200);
+      border: solid 2px var(--training-graphogame-300);
+      color: oklch(1 0 0);
+    }
+    .screen-header .btn--icon:hover {
+      background: color-mix(in oklab, var(--training-graphogame-200) 85%, black);
+    }
+
+    /* ── Header title ──────────────────────────────────────────── */
+    .graphogame__title {
+      font-size: var(--text-xl);
+      font-weight: var(--font-semibold);
+      color: oklch(1 0 0);
+    }
+
+    /* ── Panes ─────────────────────────────────────────────────── */
+    .validation__pane--lion {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .validation__pane--form {
+      flex: 2;
+    }
+
+    /* ── Lion ──────────────────────────────────────────────────── */
+    .validation__lion {
+      position: absolute;
+      bottom: -15%;
+      left: 50%;
+      transform: translateX(-50%);
+      height: 95%;
+      width: auto;
+    }
+
+    /* ── Card ──────────────────────────────────────────────────── */
+    .validation__card {
+      width: 100%;
+      max-width: 24rem;
+    }
+
+    .card__title {
+      font-size: var(--text-xl);
+    }
+
+    /* ── Card title row ────────────────────────────────────────── */
+    .card__title-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+    }
+
+    .btn--info {
+      width: 1.5rem;
+      height: 1.5rem;
+      border-radius: var(--radius-full);
+      border: none;
+      background: none;
+      color: var(--muted-foreground);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      padding: 0;
+    }
+    .btn--info:hover {
+      color: var(--foreground);
+    }
+
+    /* ── Stepper ───────────────────────────────────────────────── */
+    .stepper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-full);
+      padding: var(--space-2) var(--space-3);
+    }
+
+    .stepper__btn {
+      width: 2.25rem;
+      height: 2.25rem;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border);
+      background: var(--background);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--foreground);
+      flex-shrink: 0;
+    }
+    .stepper__btn:hover {
+      background: var(--muted);
+    }
+
+    .stepper__value {
+      font-size: var(--text-lg);
+      font-weight: var(--font-semibold);
+      color: var(--foreground);
+      flex: 1;
+      text-align: center;
+    }
+
+    /* ── Info dialog image ─────────────────────────────────────── */
+    .info-screenshot {
+      width: 100%;
+      border-radius: var(--radius-xl);
+      display: block;
+    }
+
+    /* ── Floating audio button ─────────────────────────────────── */
+    .btn-audio {
+      position: absolute;
+      bottom: var(--space-4);
+      right: var(--space-4);
+      width: 3.5rem;
+      height: 3.5rem;
+      background: var(--training-graphogame-300);
+      border: none;
+      color: oklch(1 0 0);
+      z-index: 10;
+    }
+    .btn-audio:hover {
+      background: color-mix(in oklab, var(--training-graphogame-300) 85%, black);
+    }
+
+    .audio-bars {
+      width: 1.25em;
+      height: 1.25em;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+  <!-- Dialog — info chronomètre -->
+  <div class="dialog-overlay" id="info-overlay">
+    <button class="btn btn--icon btn--primary dialog__close" id="btn-info-close" aria-label="Fermer">
+      <i data-lucide="x" class="text-xl"></i>
+    </button>
+    <div class="dialog-wrapper">
+      <div class="dialog-lion">
+        <img src="../assets/illustration/thinking.png" class="dialog-lion__img" alt="">
+      </div>
+      <div class="dialog-pane">
+        <div class="dialog">
+          <div class="dialog__content">
+            <h2 class="dialog__title text-center">Cliquez sur le chronomètre pour afficher la durée de la session</h2>
+            <img src="../assets/graphogame/timer-help.png" class="info-screenshot" alt="Chronomètre Graphogame">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="game-viewport">
+    <div class="game-canvas">
+      <div class="screen screen-layout">
+
+        <header class="screen-header">
+          <div class="bar-start">
+            <a href="graphogame-access.html" class="btn btn--icon btn--primary" aria-label="Retour">
+              <i data-lucide="arrow-left" class="text-xl"></i>
+            </a>
+            <span class="graphogame__title">Graphogame</span>
+          </div>
+        </header>
+
+        <main class="screen-body screen-body--split">
+
+          <div class="screen-pane validation__pane--lion">
+            <img src="../assets/illustration/phone.png" class="validation__lion" alt="">
+          </div>
+
+          <div class="screen-pane validation__pane--form">
+            <div class="card validation__card">
+
+              <div class="card__header">
+                <div class="card__title-row">
+                  <span class="card__title">Durée de la session</span>
+                  <button class="btn--info" id="btn-info" aria-label="Aide">
+                    <i data-lucide="info" class="text-base"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="card__content">
+                <div class="stepper">
+                  <button class="stepper__btn" id="btn-minus" aria-label="Diminuer">
+                    <i data-lucide="minus" class="text-base"></i>
+                  </button>
+                  <span class="stepper__value" id="duration-display">0 min</span>
+                  <button class="stepper__btn" id="btn-plus" aria-label="Augmenter">
+                    <i data-lucide="plus" class="text-base"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="card__footer">
+                <button class="btn btn--default btn--lg btn--full" id="btn-finish">
+                  <i data-lucide="check" class="text-xl"></i>
+                  Terminer
+                </button>
+              </div>
+
+            </div>
+          </div>
+
+        </main>
+
+        <!-- Bouton audio flottant -->
+        <button class="btn btn--icon btn-audio" aria-label="Écouter les instructions">
+          <svg class="audio-bars" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <rect x="2"    y="0" width="2.5" height="24" rx="1.25"/>
+            <rect x="7.5"  y="0" width="2.5" height="24" rx="1.25"/>
+            <rect x="13"   y="0" width="2.5" height="24" rx="1.25"/>
+            <rect x="18.5" y="0" width="2.5" height="24" rx="1.25"/>
+          </svg>
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script type="module" src="../components/main.js"></script>
+  <script>
+    lucide.createIcons();
+
+    // ── Info overlay ───────────────────────────────────────────────
+    const infoOverlay  = document.getElementById('info-overlay');
+    const btnInfo      = document.getElementById('btn-info');
+    const btnInfoClose = document.getElementById('btn-info-close');
+
+    function openInfo()  { infoOverlay.classList.add('dialog-overlay--open'); }
+    function closeInfo() { infoOverlay.classList.remove('dialog-overlay--open'); }
+
+    btnInfo.addEventListener('click', openInfo);
+    btnInfoClose.addEventListener('click', closeInfo);
+    infoOverlay.addEventListener('click', e => { if (e.target === infoOverlay) closeInfo(); });
+
+    // ── Stepper ────────────────────────────────────────────────────
+    const display = document.getElementById('duration-display');
+    let duration  = 0;
+
+    document.getElementById('btn-minus').addEventListener('click', () => {
+      if (duration > 0) duration--;
+      display.textContent = duration + ' min';
+    });
+
+    document.getElementById('btn-plus').addEventListener('click', () => {
+      duration++;
+      display.textContent = duration + ' min';
+    });
+
+    // ── Navigation ─────────────────────────────────────────────────
+    document.getElementById('btn-finish').addEventListener('click', () => {
+      window.location.href = 'graphogame-congrats.html';
+    });
+  </script>
+</body>
+</html>

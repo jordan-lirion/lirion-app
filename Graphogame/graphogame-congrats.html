@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <!-- === PWA / Web App iOS === -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Lirion">
+  <meta name="theme-color" content="#facc15">
+  <link rel="apple-touch-icon" href="../assets/icons/icon-180.png">
+  <link rel="manifest" href="../manifest.json">
+  <!-- === /PWA === -->
+  <title>Lirion — Graphogame · Bravo !</title>
+  <link rel="stylesheet" href="../components/main.css">
+  <style>
+    .game-canvas {
+      background: var(--training-graphogame-200);
+    }
+
+    /* ── Background rotatif ────────────────────────────────────── */
+    .congrats-bg {
+      position: absolute;
+      inset: -50%;
+      background: url('../assets/illustration/congrats.png') center / cover no-repeat;
+      animation: congrats-spin 60s linear infinite;
+    }
+
+    @keyframes congrats-spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    /* ── Pause button ──────────────────────────────────────────── */
+    .screen-header .btn--icon {
+      background: var(--training-graphogame-200);
+      border: solid 2px var(--training-graphogame-300);
+      color: oklch(1 0 0);
+    }
+    .screen-header .btn--icon:hover {
+      background: color-mix(in oklab, var(--training-graphogame-200) 85%, black);
+    }
+
+    /* ── Panes ─────────────────────────────────────────────────── */
+    .congrats__pane--lion {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .congrats__pane--form {
+      flex: 2;
+    }
+
+    /* ── Lion ──────────────────────────────────────────────────── */
+    .congrats__lion {
+      position: absolute;
+      bottom: -15%;
+      left: 50%;
+      transform: translateX(-50%);
+      height: 95%;
+      width: auto;
+    }
+
+    /* ── Card ──────────────────────────────────────────────────── */
+    .congrats__card {
+      width: 100%;
+      max-width: 24rem;
+    }
+
+    .card__title {
+      font-size: var(--text-xl);
+    }
+
+    /* ── Icon + name ───────────────────────────────────────────── */
+    .congrats__identity {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    .congrats__icon-circle {
+      width: 3.5rem;
+      height: 3.5rem;
+      border-radius: var(--radius-full);
+      background: var(--training-graphogame-300);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      flex-shrink: 0;
+      color: oklch(1 0 0);
+    }
+
+    .congrats__icon-badge {
+      position: absolute;
+      top: -0.25rem;
+      right: -0.25rem;
+      width: 1.5rem;
+      height: 1.5rem;
+      font-size: var(--text-xs);
+      border: 2px solid oklch(1 0 0);
+    }
+
+    .congrats__name {
+      font-size: var(--text-lg);
+      font-weight: var(--font-semibold);
+      color: var(--foreground);
+    }
+
+    /* ── Result row ────────────────────────────────────────────── */
+    .result-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-2) var(--space-2) var(--space-2) var(--space-3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-full);
+    }
+
+    .result-row__label {
+      font-size: var(--text-lg);
+      color: var(--muted-foreground);
+    }
+
+    .result-row__badge {
+      background: var(--training-graphogame-300);
+      color: oklch(1 0 0);
+      font-size: var(--text-sm);
+      font-weight: var(--font-semibold);
+      padding: var(--space-2) var(--space-3);
+      border-radius: var(--radius-full);
+      border: 1px solid var(--training-graphogame-300);
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+  <!-- Dialog — pause -->
+  <div class="dialog-overlay" id="pause-overlay">
+    <button class="btn btn--icon btn--primary dialog__close" id="btn-pause-close" aria-label="Reprendre">
+      <i data-lucide="x" class="text-xl"></i>
+    </button>
+    <div class="dialog-wrapper">
+      <div class="dialog-lion">
+        <img src="../assets/illustration/thinking.png" class="dialog-lion__img" alt="">
+      </div>
+      <div class="dialog-pane">
+        <div class="dialog">
+          <div class="dialog__content">
+            <h2 class="dialog__title">Ton entraînement est en pause.</h2>
+          </div>
+          <div class="dialog__footer">
+            <button class="btn btn--default btn--lg btn--full" id="btn-pause-resume">
+              <i data-lucide="play"></i>
+              Reprendre
+            </button>
+            <button class="btn btn--outline btn--lg btn--full" id="btn-pause-quit">
+              Quitter
+            </button>
+            <p class="dialog__text text-center">Tu devras recommencer à zéro.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="game-viewport">
+    <div class="game-canvas">
+      <div class="congrats-bg"></div>
+      <div class="screen screen-layout">
+
+        <header class="screen-header">
+          <div class="bar-start">
+            <button class="btn btn--icon btn--primary" id="btn-pause" aria-label="Pause">
+              <i data-lucide="pause" fill="#fff" class="text-2xl"></i>
+            </button>
+          </div>
+        </header>
+
+        <main class="screen-body screen-body--split">
+
+          <div class="screen-pane congrats__pane--lion">
+            <img src="../assets/illustration/sucess.png" class="congrats__lion" alt="">
+          </div>
+
+          <div class="screen-pane congrats__pane--form">
+            <div class="card congrats__card">
+
+              <div class="card__content">
+
+                <!-- Icône + nom -->
+                <div class="congrats__identity">
+                  <div class="congrats__icon-circle">
+                    <i data-lucide="book-open" class="text-2xl"></i>
+                    <div class="badge-icon badge-icon--success congrats__icon-badge">
+                      <i data-lucide="check" class="text-xs"></i>
+                    </div>
+                  </div>
+                  <span class="congrats__name">Graphogame</span>
+                </div>
+
+                <!-- Résultat -->
+                <div class="result-row">
+                  <span class="result-row__label">Durée de la session</span>
+                  <span class="result-row__badge">10 min</span>
+                </div>
+
+              </div>
+
+              <div class="card__footer">
+                <button class="btn btn--default btn--lg btn--full" id="btn-continue">
+                  Continuer
+                </button>
+              </div>
+
+            </div>
+          </div>
+
+        </main>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script type="module" src="../components/main.js"></script>
+  <script>
+    lucide.createIcons();
+
+    // ── Pause overlay ──────────────────────────────────────────────
+    const pauseOverlay  = document.getElementById('pause-overlay');
+    const btnPause      = document.getElementById('btn-pause');
+    const btnPauseClose = document.getElementById('btn-pause-close');
+    const btnResume     = document.getElementById('btn-pause-resume');
+    const btnQuit       = document.getElementById('btn-pause-quit');
+
+    function openPause()  { pauseOverlay.classList.add('dialog-overlay--open'); }
+    function closePause() { pauseOverlay.classList.remove('dialog-overlay--open'); }
+
+    btnPause.addEventListener('click', openPause);
+    btnPauseClose.addEventListener('click', closePause);
+    btnResume.addEventListener('click', closePause);
+    btnQuit.addEventListener('click', () => { window.location.href = '../home.html'; });
+    pauseOverlay.addEventListener('click', e => { if (e.target === pauseOverlay) closePause(); });
+
+    // ── Navigation ─────────────────────────────────────────────────
+    document.getElementById('btn-continue').addEventListener('click', () => {
+      window.location.href = '../home.html';
+    });
+  </script>
+</body>
+</html>

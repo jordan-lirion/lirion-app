@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <!-- === PWA / Web App iOS === -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Lirion">
+  <meta name="theme-color" content="#facc15">
+  <link rel="apple-touch-icon" href="../assets/icons/icon-180.png">
+  <link rel="manifest" href="../manifest.json">
+  <!-- === /PWA === -->
+  <title>Lirion — Graphogame · Accès</title>
+  <link rel="stylesheet" href="../components/main.css">
+  <style>
+    .game-canvas {
+      background: var(--training-graphogame-200);
+    }
+
+    /* ── Pause button ──────────────────────────────────────────── */
+    .screen-header .btn--icon {
+      background: var(--training-graphogame-200);
+      border: solid 2px var(--training-graphogame-300);
+      color: oklch(1 0 0);
+    }
+    .screen-header .btn--icon:hover {
+      background: color-mix(in oklab, var(--training-graphogame-200) 85%, black);
+    }
+
+    /* ── Header title ──────────────────────────────────────────── */
+    .graphogame__title {
+      font-size: var(--text-xl);
+      font-weight: var(--font-semibold);
+      color: oklch(1 0 0);
+    }
+
+    /* ── Panes ─────────────────────────────────────────────────── */
+    .access__pane--lion {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .access__pane--form {
+      flex: 2;
+    }
+
+    /* ── Lion ──────────────────────────────────────────────────── */
+    .access__lion {
+      position: absolute;
+      bottom: -15%;
+      left: 50%;
+      transform: translateX(-50%);
+      height: 95%;
+      width: auto;
+    }
+
+    /* ── Card ──────────────────────────────────────────────────── */
+    .access__card {
+      width: 100%;
+      max-width: 24rem;
+    }
+
+    .card__title {
+      font-size: var(--text-xl);
+    }
+
+    /* ── Info row ──────────────────────────────────────────────── */
+    .info-row {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    .info-row__icon {
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: var(--radius-full);
+      background: var(--training-graphogame-300);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: oklch(1 0 0);
+    }
+
+    .info-row__text {
+      font-size: var(--text-lg);
+      color: var(--muted-foreground);
+      line-height: var(--leading-normal);
+    }
+
+    /* ── Floating audio button ─────────────────────────────────── */
+    .btn-audio {
+      position: absolute;
+      bottom: var(--space-4);
+      right: var(--space-4);
+      width: 3.5rem;
+      height: 3.5rem;
+      background: var(--training-graphogame-300);
+      border: none;
+      color: oklch(1 0 0);
+      z-index: 10;
+    }
+    .btn-audio:hover {
+      background: color-mix(in oklab, var(--training-graphogame-300) 85%, black);
+    }
+
+    .audio-bars {
+      width: 1.25em;
+      height: 1.25em;
+      flex-shrink: 0;
+    }
+
+    /* ── Contact rows ──────────────────────────────────────────── */
+    .contact-rows {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+
+    .contact-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-3) var(--space-4);
+      background: var(--background);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-full);
+    }
+
+    .contact-row--center {
+      justify-content: center;
+    }
+
+    .contact-label {
+      font-size: var(--text-sm);
+      color: var(--muted-foreground);
+    }
+
+    .contact-value {
+      font-size: var(--text-sm);
+      font-weight: var(--font-semibold);
+      color: var(--foreground);
+    }
+  </style>
+</head>
+<body>
+  <!-- Dialog — pause -->
+  <div class="dialog-overlay" id="pause-overlay">
+    <button class="btn btn--icon btn--primary dialog__close" id="btn-pause-close" aria-label="Reprendre">
+      <i data-lucide="x" class="text-xl"></i>
+    </button>
+    <div class="dialog-wrapper">
+      <div class="dialog-lion">
+        <img src="../assets/illustration/thinking.png" class="dialog-lion__img" alt="">
+      </div>
+      <div class="dialog-pane">
+        <div class="dialog">
+          <div class="dialog__content">
+            <h2 class="dialog__title">Ton entraînement est en pause.</h2>
+          </div>
+          <div class="dialog__footer">
+            <button class="btn btn--default btn--lg btn--full" id="btn-pause-resume">
+              <i data-lucide="play"></i>
+              Reprendre
+            </button>
+            <button class="btn btn--outline btn--lg btn--full" id="btn-pause-quit">
+              Quitter
+            </button>
+            <p class="dialog__text text-center">Tu devras recommencer à zéro.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dialog — contact -->
+  <div class="dialog-overlay" id="contact-overlay">
+    <button class="btn btn--icon btn--primary dialog__close" id="btn-contact-close" aria-label="Fermer">
+      <i data-lucide="x" class="text-xl"></i>
+    </button>
+    <div class="dialog-wrapper">
+      <div class="dialog-lion">
+        <img src="../assets/illustration/thinking.png" class="dialog-lion__img" alt="">
+      </div>
+      <div class="dialog-pane">
+        <div class="dialog">
+          <div class="dialog__content">
+            <h2 class="dialog__title text-center">Nous contacter</h2>
+            <div class="contact-rows">
+              <div class="contact-row">
+                <span class="contact-label">Email</span>
+                <span class="contact-value">support@lirion.app</span>
+              </div>
+              <div class="contact-row">
+                <span class="contact-label">Téléphone</span>
+                <span class="contact-value">+33 (0) 6 19 58 51 46</span>
+              </div>
+              <div class="contact-row contact-row--center">
+                <span class="contact-label">Du lundi au vendredi de 9h à 18h</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="game-viewport">
+    <div class="game-canvas">
+      <div class="screen screen-layout">
+
+        <header class="screen-header">
+          <div class="bar-start">
+            <button class="btn btn--icon btn--primary" id="btn-pause" aria-label="Pause">
+              <i data-lucide="pause" fill="#fff" class="text-2xl"></i>
+            </button>
+            <span class="graphogame__title">Graphogame</span>
+          </div>
+        </header>
+
+        <main class="screen-body screen-body--split">
+
+          <div class="screen-pane access__pane--lion">
+            <img src="../assets/illustration/phone.png" class="access__lion" alt="">
+          </div>
+
+          <div class="screen-pane access__pane--form">
+            <div class="card access__card">
+
+              <div class="card__content">
+                <button class="btn btn--outline btn--lg btn--full" id="btn-open-app">
+                  <i data-lucide="external-link" class="text-xl"></i>
+                  Ouvrir Graphogame
+                </button>
+                <div class="info-row">
+                  <div class="info-row__icon">
+                    <i data-lucide="user" class="text-base"></i>
+                  </div>
+                  <p class="info-row__text">Quand vous avez terminé, revenez ici pour valider l'entrainement.</p>
+                </div>
+              </div>
+
+              <div class="card__footer">
+                <button class="btn btn--default btn--lg btn--full" id="btn-finish">
+                  Terminer entrainement
+                </button>
+                <a href="#" class="btn btn--link" id="btn-problem">
+                  Un problème d'accès ?
+                </a>
+              </div>
+
+            </div>
+          </div>
+
+        </main>
+
+        <!-- Bouton audio flottant -->
+        <button class="btn btn--icon btn-audio" aria-label="Écouter les instructions">
+          <svg class="audio-bars" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <rect x="2"    y="0" width="2.5" height="24" rx="1.25"/>
+            <rect x="7.5"  y="0" width="2.5" height="24" rx="1.25"/>
+            <rect x="13"   y="0" width="2.5" height="24" rx="1.25"/>
+            <rect x="18.5" y="0" width="2.5" height="24" rx="1.25"/>
+          </svg>
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script type="module" src="../components/main.js"></script>
+  <script>
+    lucide.createIcons();
+
+    // ── Pause overlay ──────────────────────────────────────────────
+    const pauseOverlay  = document.getElementById('pause-overlay');
+    const btnPause      = document.getElementById('btn-pause');
+    const btnPauseClose = document.getElementById('btn-pause-close');
+    const btnResume     = document.getElementById('btn-pause-resume');
+    const btnQuit       = document.getElementById('btn-pause-quit');
+
+    function openPause()  { pauseOverlay.classList.add('dialog-overlay--open'); }
+    function closePause() { pauseOverlay.classList.remove('dialog-overlay--open'); }
+
+    btnPause.addEventListener('click', openPause);
+    btnPauseClose.addEventListener('click', closePause);
+    btnResume.addEventListener('click', closePause);
+    btnQuit.addEventListener('click', () => { window.location.href = '../home.html'; });
+    pauseOverlay.addEventListener('click', e => { if (e.target === pauseOverlay) closePause(); });
+
+    // ── Contact overlay ────────────────────────────────────────────
+    const contactOverlay  = document.getElementById('contact-overlay');
+    const btnContactClose = document.getElementById('btn-contact-close');
+    const btnProblem      = document.getElementById('btn-problem');
+
+    function openContact()  { contactOverlay.classList.add('dialog-overlay--open'); }
+    function closeContact() { contactOverlay.classList.remove('dialog-overlay--open'); }
+
+    btnProblem.addEventListener('click', e => { e.preventDefault(); openContact(); });
+    btnContactClose.addEventListener('click', closeContact);
+    contactOverlay.addEventListener('click', e => { if (e.target === contactOverlay) closeContact(); });
+
+    // ── Navigation ─────────────────────────────────────────────────
+    document.getElementById('btn-open-app').addEventListener('click', () => {
+      const ua = navigator.userAgent;
+      if (/android/i.test(ua)) {
+        window.open('https://play.google.com/store/apps/details?id=com.graphogroup.GGFrenchAdapt&pcampaignid=web_share', '_blank');
+      } else {
+        window.open('https://apps.apple.com/fr/app/graphogame-fran%C3%A7ais/id6744646685', '_blank');
+      }
+    });
+    document.getElementById('btn-finish').addEventListener('click', () => {
+      window.location.href = 'graphogame-training-validation.html';
+    });
+  </script>
+</body>
+</html>

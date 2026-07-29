@@ -310,9 +310,9 @@
     document.getElementById('btn-open-app').addEventListener('click', () => {
       const ua = navigator.userAgent;
       if (/android/i.test(ua)) {
-        window.open('https://play.google.com/store/apps/details?id=com.graphogroup.GGFrenchAdapt&pcampaignid=web_share', '_blank');
+        window.location.href = 'https://play.google.com/store/apps/details?id=com.graphogroup.GGFrenchAdapt&pcampaignid=web_share';
       } else {
-        window.open('https://apps.apple.com/fr/app/graphogame-fran%C3%A7ais/id6744646685', '_blank');
+        window.location.href = 'https://apps.apple.com/fr/app/graphogame-fran%C3%A7ais/id6744646685';
       }
     });
     document.getElementById('btn-finish').addEventListener('click', () => {

@@ -469,3 +469,42 @@ html, body {
   gap: var(--space-2);
   flex-shrink: 0;
 }
+
+/* ── Rotate overlay (portrait lock) ─────────────────────────── */
+#rotate-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--background);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-6);
+}
+
+@media (orientation: portrait) {
+  #rotate-overlay { display: flex; }
+}
+
+.rotate-overlay__icon {
+  width: 5rem;
+  height: 5rem;
+  color: var(--muted-foreground);
+  animation: rotate-hint 2.5s ease-in-out infinite;
+}
+
+@keyframes rotate-hint {
+  0%   { transform: rotate(0deg); }
+  35%  { transform: rotate(-90deg); }
+  65%  { transform: rotate(-90deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.rotate-overlay__text {
+  font-size: var(--text-base);
+  font-weight: var(--font-medium);
+  color: var(--muted-foreground);
+  text-align: center;
+  line-height: var(--leading-normal);
+}
